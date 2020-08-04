@@ -9,8 +9,10 @@ Author URI:   https://richbee.ru/
 
 */
 
-html {
-    font-family: 'Roboto', sans-serif;
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+
+html body, html header {
+    font-family: 'Montserrat', sans-serif;
 }
 
 body {
@@ -263,14 +265,78 @@ ul.menu li.current-menu-item > a:before {
 
 header#masthead {
     opacity: 1;
-    font-family: Roboto, sans-serif;
-    padding: 1.9rem 1rem !important;
-    background-color: #1C1C1C;
-    color: #EEEEEE;
-    border-bottom: 1px solid #2D2D2D;
+    padding: 10px 0 0 !important;
+    background-color: #fff;
+    color: #000000;
+    border: 0;
     z-index: 3;
     position: relative;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, .5);
+    box-shadow: none;
+}
+
+.navbar-phone, .navbar-email {
+    display: flex;
+    flex-direction: row;
+    align-items: end;
+}
+
+.navbar-phone p:first-of-type, .navbar-email p:first-of-type {
+    margin-bottom: 3px;
+}
+
+.navbar-phone p:first-of-type a, .navbar-email p:first-of-type a {
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 17px;
+    color: #000000;
+}
+
+.navbar-phone p:last-of-type, .navbar-email p:last-of-type {
+    font-weight: 300;
+    font-size: 12px;
+    line-height: 12px;
+    color: #757575;
+    margin-bottom: 0;
+}
+
+.navbar-phone img, .navbar-email img {
+    margin-right: 10px;
+}
+
+footer .navbar-brand-logo {
+    margin-bottom: 25px;
+}
+
+.navbar-brand-logo {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.navbar-brand-logo > img {
+    margin-right: 10px;
+}
+
+.navbar-brand-logo__name {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    line-height: 24px;
+    color: #000000;
+    text-transform: uppercase;
+    margin-bottom: 3px;
+}
+
+.navbar-brand-logo__name span {
+    color: #86BC6A;
+}
+
+.navbar-brand-logo__small {
+    font-weight: 300;
+    font-size: 12px;
+    line-height: 12px;
+    color: #757575;
+    margin-bottom: 0;
 }
 
 .navbar-dark .navbar-nav .active > .nav-link:before, .navbar-dark .navbar-nav .nav-link.active:before, .navbar-dark .navbar-nav .nav-link.show:before, .navbar-dark .navbar-nav .show > .nav-link:before {
@@ -307,23 +373,26 @@ header#masthead {
     position: relative;
     padding: 1rem 0 !important;
     margin: 0 1rem;
-    color: #fff !important;
     transition: color .1s cubic-bezier(.4, 0, .2, 1);
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 17px;
+    color: #3D3D3D !important;
 }
 
-.navbar-expand-xl .navbar-collapse .navbar-nav:hover .nav-item:not(.active) a {
-    color: #9e9e9e !important;
-}
-
-.navbar-dark .navbar-collapse .navbar-nav .nav-item:not(.active) a:hover {
-    color: #fff !important;
+.registration-link {
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 17px;
+    color: #3D3D3D;
 }
 
 #searchBtn {
-    position: absolute;
-    top: 0;
-    z-index: 1;
-    text-align: center;
+    background: #86BC6A;
+    border-radius: 0 10px 10px 0;
+    border: 0;
+    min-height: 36px;
+    padding: 7px 9px;
 }
 
 .search-btn {
@@ -336,19 +405,44 @@ header#masthead {
 }
 
 .search-div {
-    width: 46px;
-    height: 46px;
+    width: 200px;
     z-index: 2;
+    margin-right: 16px;
+}
+
+input[type=text], input[type=number], input[type=email], input[type=tel], input[type=url], input[type=password], input[type=search], textarea, .input-text {
+    min-height: 36px;
+    overflow: hidden;
+    font-size: 1rem;
+    line-height: 1.75rem;
+    font-weight: 400;
+    letter-spacing: .009375em;
+    padding: 10px 16px;
+    box-shadow: none;
+
+
+    background: #FFFFFF;
+    border: 1px solid #F3F3F3;
+    box-sizing: border-box;
+    border-radius: 10px;
 }
 
 #searchForm {
-    position: absolute;
-    left: -10rem;
-    width: 215px;
-    z-index: 5;
-    top: 40px;
-    display: none;
-    box-shadow: rgba(197, 197, 201, 0.15) 0px 14px 15px 2px;
+    margin-bottom: 0;
+}
+
+#searchForm input {
+    background: #FFFFFF;
+    border: 1px solid #F3F3F3;
+    box-sizing: border-box;
+    border-radius: 10px 0 0 10px;
+}
+
+.site-header hr {
+    border: 0;
+    margin-top: 10px;
+    margin-bottom: 0;
+    border-bottom: 1px solid #F5F5F5;
 }
 
 /*меню*/
@@ -522,6 +616,29 @@ header#masthead {
     padding: 0;
 }
 
+.site-info > .footer-phone {
+    margin-bottom: 10px;
+}
+
+.site-info > .footer-email {
+    margin-bottom: 0;
+}
+
+.site-info > .footer-email > a {
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 22px;
+    color: #252525;
+}
+
+.site-info > .footer-phone > a {
+    font-weight: normal;
+    font-size: 24px;
+    line-height: 29px;
+    text-align: center;
+    color: #252525;
+}
+
 .footer-menu ul {
     list-style-type: none;
     font-weight: normal;
@@ -532,14 +649,122 @@ header#masthead {
     margin-left: 0;
 }
 
+.footer-menu__header {
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 22px;
+    color: #000000;
+    margin-bottom: 35px;
+}
+
 footer.site-footer {
-    padding-top: 80px;
-    padding-bottom: 50px;
+    border-top: 1px solid #F5F5F5;
+    padding-top: 30px;
+    padding-bottom: 27px;
     font-size: 1rem;
+    background: #fff;
+}
+
+.site-footer hr {
+    margin-top: 35px;
+    margin-bottom: 27px;
+    border: 0;
+    border-bottom: 1px solid #F5F5F5;
+}
+
+.footer-name-p {
+    margin-bottom: 0;
+    font-weight: 300;
+    font-size: 13px;
+    line-height: 16px;
+    color: #555555;
+    align-self: center;
 }
 
 /*--------------------------------------------------------------
 # FOOTER
+--------------------------------------------------------------*/
+
+/*--------------------------------------------------------------
+# DELIVERY
+--------------------------------------------------------------*/
+
+.delivery .container {
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+
+.delivery-cards {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.delivery-cards .delivery-cards__item {
+    max-width: 190px;
+    width: 100%;
+    margin-bottom: 25px;
+}
+
+.delivery-cards .delivery-cards__item img {
+    margin-bottom: 10px;
+}
+
+.delivery-cards .delivery-cards__item p:first-of-type {
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 20px;
+    color: #000000;
+    margin-bottom: 8px;
+}
+
+.delivery-cards .delivery-cards__item p:last-of-type {
+    font-weight: 300;
+    font-size: 13px;
+    line-height: 16px;
+    color: #545454;
+    margin-bottom: 0;
+}
+
+.delivery-card {
+    width: 100%;
+    background: url("/wp-content/themes/storefront-child/images/delivery/gazel.jpg") no-repeat bottom right;
+    background-size: 100%;
+    height: 400px;
+}
+
+.delivery-card .delivery-card__body {
+    padding: 45px 50px;
+}
+
+.delivery-card p {
+    font-weight: 800;
+    font-size: 18px;
+    line-height: 22px;
+    color: #FFFFFF;
+    text-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+.delivery-card .delivery-card__header {
+    font-weight: 800;
+    font-size: 36px;
+    line-height: 36px;
+    color: #FFFFFF;
+    text-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    margin-bottom: 20px;
+}
+
+.delivery-card .delivery-card__price {
+    font-weight: 600;
+    font-size: 32px;
+    line-height: 39px;
+    color: #FFFFFF;
+    text-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+/*--------------------------------------------------------------
+# DELIVERY
 --------------------------------------------------------------*/
 
 /*--------------------------------------------------------------
@@ -664,20 +889,6 @@ ul.products li.product:hover {
 .woocommerce-billing-fields .form-row {
     margin-right: 0;
     margin-left: 0;
-}
-
-input[type='text'], input[type='number'], input[type='email'], input[type='tel'], input[type='url'], input[type='password'], input[type='search'], textarea, .input-text {
-    border-radius: 4px 4px 0px 0px;
-    border-bottom-color: #000000;
-    min-height: 56px;
-    overflow: hidden;
-    font-size: 1rem;
-    line-height: 1.75rem;
-    font-weight: 400;
-    letter-spacing: .009375em;
-    padding: 15px 16px 13px;
-    border-bottom: 1px solid;
-    box-shadow: none;
 }
 
 button, input[type='button'], input[type='reset'], input[type='submit'], .button, .wc-block-grid__products .wc-block-grid__product .wp-block-button__link, .added_to_cart {

@@ -327,3 +327,42 @@ function jk_related_products_args($args)
     return $args;
 }
 
+function get_popular_products()
+{
+    $args = array(
+        'post_type' => array('product'),
+        'meta_key' => 'total_sales',
+        'orderby' => 'meta_value_num',
+        'order' => 'desc'
+    );
+    $products = wc_get_products($args);
+    ob_start();
+    ?>
+    <div id="popularProducts" class="products-list">
+        <div class="container">
+            <p class="products-list__header">Популярные товары</p>
+            <div class="row">
+                <?php
+                foreach ($products as $product):
+                    $image_id = $product->get_image_id();
+                    ?>
+                    <div class="col-lg-3 col-12">
+                        <div class="card-products-list">
+                            <div class="card-products-list__header">
+                                <img class="card-products-list-hover"
+                                     src="<?= wp_get_attachment_image_url($image_id, 'full'); ?>"
+                                     alt="<?= $product->name; ?>">
+                                <p class="card-products-list__title"><?= $product->name; ?>
+                                <p class="card-products-list__price"><?= $product->get_price(); ?> ₽</p>
+                            </div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </div>
+    <?php
+    return ob_get_clean();
+}
+
+
