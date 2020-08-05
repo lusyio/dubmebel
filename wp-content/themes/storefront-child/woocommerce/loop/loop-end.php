@@ -31,4 +31,6 @@ $activeCat = get_queried_object();
 </div>
 </div>
 </div>
+<?= get_delivery_block(); ?>
+
 
