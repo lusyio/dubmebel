@@ -355,6 +355,11 @@ footer .navbar-brand-logo {
     object-fit: cover;
 }
 
+.categories .container {
+    padding-top: 64px;
+    padding-bottom: 40px;
+}
+
 .carousel-item-text .carousel-item-text__title {
     font-weight: bold;
     font-size: 36px;
@@ -395,6 +400,8 @@ footer .navbar-brand-logo {
 .category-list {
     margin: 0;
 }
+
+.category-list 
 
 .category-list li {
     padding: 12px 20px;
