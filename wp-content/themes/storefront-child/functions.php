@@ -410,42 +410,47 @@ function get_categories_list()
     $categories = get_terms($args);
     ob_start();
     ?>
-    <ul class="category-list">
+    <ul class="dropdown-category-list">
         <?php foreach ($categories as $category):
             $icon = '';
             switch ($category->slug) {
                 case 'antique-furniture':
-                    $icon = 'wp-content/themes/storefront-child/svg/category-icons/antique-furniture.svg';
+                    $icon = '/wp-content/themes/storefront-child/svg/category-icons/antique-furniture.svg';
                     break;
                 case 'chairs':
-                    $icon = 'wp-content/themes/storefront-child/svg/category-icons/chairs.svg';
+                    $icon = '/wp-content/themes/storefront-child/svg/category-icons/chairs.svg';
                     break;
                 case 'lunch-groups':
-                    $icon = 'wp-content/themes/storefront-child/svg/category-icons/lunch-groups.svg';
+                    $icon = '/wp-content/themes/storefront-child/svg/category-icons/lunch-groups.svg';
                     break;
                 case 'rattan-furniture':
-                    $icon = 'wp-content/themes/storefront-child/svg/category-icons/rattan-furniture.svg';
+                    $icon = '/wp-content/themes/storefront-child/svg/category-icons/rattan-furniture.svg';
                     break;
                 case 'stools':
-                    $icon = 'wp-content/themes/storefront-child/svg/category-icons/stools.svg';
+                    $icon = '/wp-content/themes/storefront-child/svg/category-icons/stools.svg';
                     break;
                 case 'tables':
-                    $icon = 'wp-content/themes/storefront-child/svg/category-icons/tables.svg';
+                    $icon = '/wp-content/themes/storefront-child/svg/category-icons/tables.svg';
                     break;
                 case 'tabletops':
-                    $icon = 'wp-content/themes/storefront-child/svg/category-icons/tabletops.svg';
+                    $icon = '/wp-content/themes/storefront-child/svg/category-icons/tabletops.svg';
                     break;
             }
-            ?>
-            <li>
-                <a href="<?= get_term_link($category->term_id, 'product_cat') ?>">
-                    <img class="category-list__icon"
-                         src="<?= $icon ?>"
-                         alt="<?= $category->name ?>">
-                    <span class="category-list__name"><?= $category->name ?></span>
-                </a>
-            </li>
-        <?php
+            if ($category->parent === 0):
+                ?>
+                <li>
+                    <a href="<?= get_term_link($category->term_id, 'product_cat') ?>">
+                        <div>
+                            <img class="dropdown-category-list__icon"
+                                 src="<?= $icon ?>"
+                                 alt="<?= $category->name ?>">
+                            <span class="dropdown-category-list__name"><?= $category->name ?></span>
+                        </div>
+                        <img src="/wp-content/themes/storefront-child/svg/next.svg" alt="">
+                    </a>
+                </li>
+            <?php
+            endif;
         endforeach; ?>
     </ul>
     <?php
@@ -469,7 +474,7 @@ function get_post_gallery_images_with_info($postvar = NULL, $pos = 0)
     if ($pos) {
         $post_content = preg_split('~\(:\)~', $post_content)[1];
     }
-    preg_match('/\[gallery.*ids=.(.*).\]/', $post_content, $ids);
+    preg_match('/\[gallery.*ids=.(.*).]/', $post_content, $ids);
     $images_id = explode(",", $ids[1]);
     $image_gallery_with_info = array();
     foreach ($images_id as $image_id) {
@@ -533,4 +538,215 @@ function get_slider_from_library_page()
     return ob_get_clean();
 }
 
+/**
+ * Render pagination for woocommerce
+ *
+ * @return false|string
+ */
+function get_pagination_woo()
+{
+    $total = isset($total) ? $total : wc_get_loop_prop('total_pages');
+    $current = isset($current) ? $current : wc_get_loop_prop('current_page');
+    $base = isset($base) ? $base : esc_url_raw(str_replace(999999999, '%#%', remove_query_arg('add-to-cart', get_pagenum_link(999999999, false))));
+    $format = isset($format) ? $format : '';
+
+    if ($total <= 1) {
+        return '';
+    }
+    ob_start(); ?>
+    <nav class="woocommerce-pagination">
+        <?php
+        echo paginate_links(
+            apply_filters(
+                'woocommerce_pagination_args',
+                array( // WPCS: XSS ok.
+                    'base' => $base,
+                    'format' => $format,
+                    'add_args' => false,
+                    'current' => max(1, $current),
+                    'total' => $total,
+                    'prev_text' => '&larr;',
+                    'next_text' => '&rarr;',
+                    'type' => 'list',
+                    'end_size' => 3,
+                    'mid_size' => 3,
+                )
+            )
+        );
+        ?>
+    </nav>
+    <?php
+    return ob_get_clean();
+}
+
+/**
+ * Get products by category slug
+ * @param string $slug
+ * @return false|string
+ */
+function get_products_by_category_slug($slug = '')
+{
+    if ($slug) {
+        global $paged;
+        $args = array(
+            'category' => array($slug),
+            'limit' => -1,
+            'posts_per_page' => 9,
+            'pagination' => true,
+            'page' => $paged
+        );
+    } else {
+        $args = [];
+    }
+    $products = wc_get_products($args);
+    ob_start();
+    ?>
+    <div class="row products-list">
+        <?php
+        foreach ($products as $product):
+            $image_id = $product->get_image_id();
+            ?>
+            <div class="col-lg-4 col-12">
+                <a class="card-product-link" href="<?= get_permalink($product->id) ?>">
+                    <div class="card-product">
+                        <div class="card-product__header">
+                            <div class="card-product__hover">
+                                <img src="<?= wp_get_attachment_image_url($image_id, 'full'); ?>"
+                                     alt="<?= $product->name; ?>">
+                            </div>
+                            <p class="card-product__title"><?= $product->name; ?>
+                            <p class="card-product__price"><?= $product->get_price_html(); ?></p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        <?php
+        endforeach;
+        ?>
+    </div>
+    <?php
+    return ob_get_clean();
+}
+
+/**
+ * rewrite default function woocommerce_content
+ */
+function woocommerce_content()
+{
+    if (is_singular('product')) {
+
+        while (have_posts()) :
+            the_post();
+            wc_get_template_part('content', 'single-product');
+        endwhile;
+
+    } else {
+        ?>
+
+        <?php if (woocommerce_product_loop()) : ?>
+
+            <?php do_action('woocommerce_before_shop_loop'); ?>
+
+            <?php woocommerce_product_loop_start(); ?>
+
+            <?php if (wc_get_loop_prop('total')) : ?>
+                <?php the_post(); ?>
+                <?php wc_get_template_part('content', 'product_cat'); ?>
+            <?php endif; ?>
+
+            <?php woocommerce_product_loop_end(); ?>
+
+            <?php do_action('woocommerce_after_shop_loop'); ?>
+
+        <?php
+        else :
+            do_action('woocommerce_no_products_found');
+        endif;
+    }
+}
+
+/**
+ * Render categories with subcategories. Subcategories only for active category
+ *
+ * @param $active_cat_ID
+ */
+function get_categories_with_subcategories($active_cat_ID)
+{
+    $args = array(
+        'taxonomy' => 'product_cat',
+        'hide_empty' => true,
+        'parent' => 0
+    );
+    $product_cats = get_terms($args);
+    foreach ($product_cats as $product_cat) {
+        echo '<ul class="category-list">';
+        if ($active_cat_ID === $product_cat->term_id) {
+            $active = 'active';
+        } else {
+            $active = '';
+        }
+        $link = get_term_link($product_cat->slug, $product_cat->taxonomy);
+        echo '<li class="' . $active . '"><a href="' . $link . '">' . $product_cat->name . '</a></li>';
+        $child_args = array(
+            'taxonomy' => 'product_cat',
+            'hide_empty' => true,
+            'parent' => $product_cat->term_id
+        );
+        $child_product_cats = get_terms($child_args);
+        if (count($child_product_cats) !== 0 && $active_cat_ID === $product_cat->term_id) {
+            echo '<ul class="subcategory-list">';
+            foreach ($child_product_cats as $child_product_cat) {
+                $linkSub = get_term_link($child_product_cat->slug, $child_product_cat->taxonomy);
+                echo '<li><a href="' . $linkSub . '">' . $child_product_cat->name . '</a></li>';
+            }
+            echo '</ul>';
+        }
+        echo '</ul>';
+    }
+}
+
+/**
+ * Get subcategories from parent category ID
+ * @param $parent_cat_ID
+ * @param $active_cat_ID
+ */
+function woocommerce_subcats_from_parentcat_by_ID($parent_cat_ID, $active_cat_ID)
+{
+    $args = array(
+        'hierarchical' => 1,
+        'show_option_none' => '',
+        'hide_empty' => 0,
+        'parent' => $parent_cat_ID,
+        'taxonomy' => 'product_cat'
+    );
+
+    $subcats = get_categories($args);
+    echo '<ul class="subcategory-list">';
+    foreach ($subcats as $subcat) {
+        if ($active_cat_ID === $subcat->term_id) {
+            $active = 'active';
+        } else {
+            $active = '';
+        }
+        $link = get_term_link($subcat->slug, $subcat->taxonomy);
+        echo '<li class="' . $active . '"><a href="' . $link . '">' . $subcat->name . '</a></li>';
+    }
+    echo '</ul>';
+}
+
+remove_action('woocommerce_shop_loop_subcategory_title', 'woocommerce_template_loop_category_title', 10);
+
+/**
+ * Change the breadcrumb
+ */
+add_filter('woocommerce_breadcrumb_defaults', 'new_woocommerce_breadcrumbs', 20);
+function new_woocommerce_breadcrumbs()
+{
+    return array(
+        'delimiter' => ' / ',
+        'wrap_before' => '<div class="new-storefront-breadcrumb"><div class="container"><div class="row"><div class="col-12"><nav class="woocommerce-breadcrumb">',
+        'wrap_after' => '</nav></div></div></div></div>',
+        'home' => _x('Home', 'breadcrumb', 'woocommerce'),
+    );
+}
 
