@@ -499,11 +499,11 @@ footer .navbar-brand-logo {
 }
 
 .dropdown .dropdown-menu {
-    border: 0;
     width: 100%;
     border-radius: 0;
     margin: 0;
     padding: 0;
+    border: 1px solid #F5F5F5;
 }
 
 .dropdown .btn-catalog:focus {

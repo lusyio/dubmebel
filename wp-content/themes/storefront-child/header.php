@@ -27,7 +27,6 @@
 
     <header id="masthead" class="site-header <?= is_front_page() ? 'border-bottom-0' : '' ?>" role="banner"
             style="<?php storefront_header_styles(); ?>">
-
         <div class="container">
             <nav class="navbar navbar-dark navbar-expand-xl p-0 justify-content-between">
                 <div class="navbar-brand">

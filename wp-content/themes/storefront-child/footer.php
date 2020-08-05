@@ -61,36 +61,7 @@
             <div class="col-12 text-center col-lg-5 text-lg-left mb-lg-0 mb-4">
                 <p class="footer-menu__header">Продукция</p>
 
-                <div class="row">
-                    <?php
-                    if ($menu_items = wp_get_nav_menu_items('second')) {
-                        $menu_list = '';
-                        echo '<div class="col-12 text-center col-md-6 text-lg-left">';
-                        echo '<div class="footer-menu">';
-                        echo '<ul class="menu" id="menu-second">';
-                        $menu_number = 0;
-                        foreach ((array)$menu_items as $key => $menu_item) {
-                            $title = $menu_item->title; // заголовок элемента меню (анкор ссылки)
-                            $url = $menu_item->url; // URL ссылки
-                            if ($menu_number < 4) {
-                                echo '<li class="mb-lg-3 mb-3"><a href="' . $url . '">' . $title . '</a></li>';
-                            } else {
-                                echo '</ul>';
-                                echo '</div>';
-                                echo '</div>';
-                                echo '<div class="col-12 text-center col-md-6 text-lg-left">';
-                                echo '<div class="footer-menu">';
-                                echo '<ul class="menu" id="menu-second_1">';
-                                echo '<li class="mb-lg-3 mb-3"><a href="' . $url . '">' . $title . '</a></li>';
-                            }
-                            $menu_number++;
-                        }
-                        echo '</ul>';
-                        echo '</div>';
-                        echo '</div>';
-                    }
-                    ?>
-                </div>
+                <?= get_categories_list('footer') ?>
             </div>
 
         </div>

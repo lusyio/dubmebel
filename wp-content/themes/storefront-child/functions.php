@@ -400,60 +400,92 @@ function new_price_html($price, $product)
 /**
  * Render category list for dropdown
  *
+ * @param string $type
  * @return false|string
  */
-function get_categories_list()
+function get_categories_list($type = '')
 {
     $args = array(
         'taxonomy' => "product_cat",
     );
     $categories = get_terms($args);
     ob_start();
-    ?>
-    <ul class="dropdown-category-list">
-        <?php foreach ($categories as $category):
-            $icon = '';
-            switch ($category->slug) {
-                case 'antique-furniture':
-                    $icon = '/wp-content/themes/storefront-child/svg/category-icons/antique-furniture.svg';
-                    break;
-                case 'chairs':
-                    $icon = '/wp-content/themes/storefront-child/svg/category-icons/chairs.svg';
-                    break;
-                case 'lunch-groups':
-                    $icon = '/wp-content/themes/storefront-child/svg/category-icons/lunch-groups.svg';
-                    break;
-                case 'rattan-furniture':
-                    $icon = '/wp-content/themes/storefront-child/svg/category-icons/rattan-furniture.svg';
-                    break;
-                case 'stools':
-                    $icon = '/wp-content/themes/storefront-child/svg/category-icons/stools.svg';
-                    break;
-                case 'tables':
-                    $icon = '/wp-content/themes/storefront-child/svg/category-icons/tables.svg';
-                    break;
-                case 'tabletops':
-                    $icon = '/wp-content/themes/storefront-child/svg/category-icons/tabletops.svg';
-                    break;
-            }
-            if ($category->parent === 0):
-                ?>
-                <li>
-                    <a href="<?= get_term_link($category->term_id, 'product_cat') ?>">
-                        <div>
-                            <img class="dropdown-category-list__icon"
-                                 src="<?= $icon ?>"
-                                 alt="<?= $category->name ?>">
-                            <span class="dropdown-category-list__name"><?= $category->name ?></span>
-                        </div>
-                        <img src="/wp-content/themes/storefront-child/svg/next.svg" alt="">
-                    </a>
-                </li>
+    if ($type === 'footer'):?>
+        <div class="row">
             <?php
-            endif;
-        endforeach; ?>
-    </ul>
+            if (count($categories) !== 0) {
+                echo '<div class="col-12 text-center col-md-6 text-lg-left">';
+                echo '<div class="footer-menu">';
+                echo '<ul class="menu" id="menu-second">';
+                $menu_number = 0;
+                foreach ($categories as $key => $category) {
+                    $title = $category->name; // заголовок элемента меню (анкор ссылки)
+                    $url = get_term_link($category->term_id, 'product_cat'); // URL ссылки
+                    if ($menu_number < 4) {
+                        echo '<li class="mb-lg-3 mb-3"><a href="' . $url . '">' . $title . '</a></li>';
+                    } else {
+                        echo '</ul>';
+                        echo '</div>';
+                        echo '</div>';
+                        echo '<div class="col-12 text-center col-md-6 text-lg-left">';
+                        echo '<div class="footer-menu">';
+                        echo '<ul class="menu" id="menu-second_1">';
+                        echo '<li class="mb-lg-3 mb-3"><a href="' . $url . '">' . $title . '</a></li>';
+                    }
+                    $menu_number++;
+                }
+                echo '</ul>';
+                echo '</div>';
+                echo '</div>';
+            }
+            ?>
+        </div>
+    <?php else: ?>
+        <ul class="dropdown-category-list">
+            <?php foreach ($categories as $category):
+                $icon = '';
+                switch ($category->slug) {
+                    case 'antique-furniture':
+                        $icon = '/wp-content/themes/storefront-child/svg/category-icons/antique-furniture.svg';
+                        break;
+                    case 'chairs':
+                        $icon = '/wp-content/themes/storefront-child/svg/category-icons/chairs.svg';
+                        break;
+                    case 'lunch-groups':
+                        $icon = '/wp-content/themes/storefront-child/svg/category-icons/lunch-groups.svg';
+                        break;
+                    case 'rattan-furniture':
+                        $icon = '/wp-content/themes/storefront-child/svg/category-icons/rattan-furniture.svg';
+                        break;
+                    case 'stools':
+                        $icon = '/wp-content/themes/storefront-child/svg/category-icons/stools.svg';
+                        break;
+                    case 'tables':
+                        $icon = '/wp-content/themes/storefront-child/svg/category-icons/tables.svg';
+                        break;
+                    case 'tabletops':
+                        $icon = '/wp-content/themes/storefront-child/svg/category-icons/tabletops.svg';
+                        break;
+                }
+                if ($category->parent === 0):
+                    ?>
+                    <li>
+                        <a href="<?= get_term_link($category->term_id, 'product_cat') ?>">
+                            <div>
+                                <img class="dropdown-category-list__icon"
+                                     src="<?= $icon ?>"
+                                     alt="<?= $category->name ?>">
+                                <span class="dropdown-category-list__name"><?= $category->name ?></span>
+                            </div>
+                            <img src="/wp-content/themes/storefront-child/svg/next.svg" alt="">
+                        </a>
+                    </li>
+                <?php
+                endif;
+            endforeach; ?>
+        </ul>
     <?php
+    endif;
     return ob_get_clean();
 }
 
@@ -757,7 +789,6 @@ function new_woocommerce_breadcrumbs()
         'home' => _x('Home', 'breadcrumb', 'woocommerce'),
     );
 }
-
 
 /**
  * Render delivery block
