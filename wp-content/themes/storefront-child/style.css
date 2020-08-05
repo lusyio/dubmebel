@@ -342,7 +342,53 @@ footer .navbar-brand-logo {
     border: 0;
 }
 
-.navbar.navbar-dark{
+.carousel-item-text {
+    position: absolute;
+    bottom: 25%;
+    left: 45%;
+    margin: auto;
+    display: block;
+}
+
+.carousel-item img {
+    max-height: 520px;
+    object-fit: cover;
+}
+
+.carousel-item-text .carousel-item-text__title {
+    font-weight: bold;
+    font-size: 36px;
+    line-height: 24px;
+    color: #FFFFFF;
+    text-shadow: 0 0 30px #000000;
+    margin-bottom: 15px;
+}
+
+.carousel-item-text .carousel-item-text__caption {
+    font-weight: 900;
+    font-size: 36px;
+    line-height: 24px;
+    color: #FFFFFF;
+    text-shadow: 0 0 30px #000000;
+    margin-bottom: 20px;
+}
+
+.carousel-item-text .carousel-item-text__description {
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 24px;
+    color: #FFFFFF;
+    text-shadow: 0 0 30px #000000;
+    margin-bottom: 0;
+}
+
+.slider-container .carousel-indicators {
+    justify-content: start;
+    margin-right: 0;
+    margin-left: 45%;
+}
+
+.navbar.navbar-dark {
     height: 100%;
 }
 

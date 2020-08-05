@@ -452,4 +452,85 @@ function get_categories_list()
     return ob_get_clean();
 }
 
+/**
+ * get post gallery images with info
+ *
+ * @param null $postvar
+ * @param int $pos
+ * @return array
+ */
+function get_post_gallery_images_with_info($postvar = NULL, $pos = 0)
+{
+    if (!isset($postvar)) {
+        global $post;
+        $postvar = $post;
+    }
+    $post_content = $postvar->post_content;
+    if ($pos) {
+        $post_content = preg_split('~\(:\)~', $post_content)[1];
+    }
+    preg_match('/\[gallery.*ids=.(.*).\]/', $post_content, $ids);
+    $images_id = explode(",", $ids[1]);
+    $image_gallery_with_info = array();
+    foreach ($images_id as $image_id) {
+        $attachment = get_post($image_id);
+        array_push($image_gallery_with_info, array(
+                'alt' => get_post_meta($attachment->ID, '_wp_attachment_image_alt', true),
+                'caption' => $attachment->post_excerpt,
+                'description' => $attachment->post_content,
+                'href' => get_permalink($attachment->ID),
+                'src' => $attachment->guid,
+                'title' => $attachment->post_title
+            )
+        );
+    }
+    return $image_gallery_with_info;
+}
+
+/**
+ * render slider by gallery images
+ *
+ * @return false|string
+ */
+function get_slider_from_library_page()
+{
+    $gallery = get_post_gallery_images_with_info();
+    $i = 0;
+    $j = 0;
+    ob_start(); ?>
+    <div class="slider-container">
+        <div id="carouselExampleIndicators" class="carousel slide carousel-fade wow fadeIn"
+             data-ride="carousel">
+            <ol class="carousel-indicators">
+                <?php foreach ($gallery as $image_obj) : ?>
+                    <li data-target="#carouselExampleIndicators" data-slide-to="<?= $j ?>"
+                        class="<?= $j === 0 ? 'active' : '' ?>"></li>
+                    <?php
+                    $j++;
+                endforeach; ?>
+            </ol>
+            <div class="carousel-inner">
+                <?php
+                foreach ($gallery as $image_obj) :
+                    ?>
+                    <div class="carousel-item <?= $i === 0 ? 'active' : '' ?>">
+                        <img src="<?= $image_obj['src'] ?>" class="d-block w-100"
+                             alt="Gallery image"/>
+                        <div class="carousel-item-text">
+                            <p class="carousel-item-text__title"><?= $image_obj['title'] ?></p>
+                            <p class="carousel-item-text__caption"><?= $image_obj['caption'] ?></p>
+                            <p class="carousel-item-text__description"><?= $image_obj['description'] ?></p>
+                        </div>
+                    </div>
+                    <?php
+                    $i++;
+                endforeach;
+                ?>
+            </div>
+        </div>
+    </div>
+    <?php
+    return ob_get_clean();
+}
+
 

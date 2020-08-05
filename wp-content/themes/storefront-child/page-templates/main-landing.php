@@ -10,12 +10,8 @@ Template Post Type: post, page, product
 
 </div>
 </div>
-<div class="main-slider"
-     style="background: url('<?= get_the_post_thumbnail_url(12, 'full') ?>') center no-repeat; background-size: cover">
-    <div class="container" style="height: 400px">
 
-    </div>
-</div>
+<?= get_slider_from_library_page() ?>
 
 <div class="categories">
     <div class="container">
