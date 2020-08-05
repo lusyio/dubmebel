@@ -437,14 +437,14 @@ function get_categories_list()
                     break;
             }
             ?>
-            <a href="<?= get_term_link($category->term_id, 'product_cat') ?>">
-                <li>
+            <li>
+                <a href="<?= get_term_link($category->term_id, 'product_cat') ?>">
                     <img class="category-list__icon"
                          src="<?= $icon ?>"
                          alt="<?= $category->name ?>">
                     <span class="category-list__name"><?= $category->name ?></span>
-                </li>
-            </a>
+                </a>
+            </li>
         <?php
         endforeach; ?>
     </ul>

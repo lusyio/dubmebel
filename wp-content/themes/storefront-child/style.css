@@ -401,12 +401,15 @@ footer .navbar-brand-logo {
     margin: 0;
 }
 
-.category-list 
-
 .category-list li {
-    padding: 12px 20px;
+    padding: 0;
     border-bottom: 1px solid #F5F5F5;
     list-style: none;
+}
+
+.category-list li > a {
+    padding: 12px 20px;
+    display: block;
 }
 
 .category-list li img {
