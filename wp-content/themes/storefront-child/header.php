@@ -88,7 +88,18 @@
         <hr>
         <div class="container">
             <div class="row">
-                <div class="col-lg-12">
+                <div class="col-lg-4 col-12">
+                    <div class="dropdown">
+                        <button class="btn btn-catalog dropdown-toggle" type="button" id="dropdownMenuButton"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <img src="/wp-content/themes/storefront-child/svg/catalog.svg" alt=""> Каталог
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <?= get_categories_list() ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-8 col-12">
                     <nav class="navbar navbar-dark navbar-expand-xl p-0 justify-content-between">
                         <?php
                         wp_nav_menu(array(

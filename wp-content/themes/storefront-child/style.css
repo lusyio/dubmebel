@@ -327,6 +327,71 @@ footer .navbar-brand-logo {
     margin-bottom: 3px;
 }
 
+.dropdown .btn-catalog {
+    background: #86BC6A;
+    width: 100%;
+    padding: 12px 20px;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 20px;
+    color: #FFFFFF;
+    text-align: left;
+    border-radius: 0;
+    max-height: 56px;
+    min-height: 56px;
+    border: 0;
+}
+
+.navbar.navbar-dark{
+    height: 100%;
+}
+
+.category-list {
+    margin: 0;
+}
+
+.category-list li {
+    padding: 12px 20px;
+    border-bottom: 1px solid #F5F5F5;
+    list-style: none;
+}
+
+.category-list li img {
+    margin-right: 20px;
+}
+
+.category-list li span {
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 20px;
+    color: #505050;
+}
+
+.dropdown .dropdown-menu {
+    border: 0;
+    width: 100%;
+    border-radius: 0;
+    margin: 0;
+    padding: 0;
+}
+
+.dropdown .btn-catalog:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+.dropdown .btn-catalog:hover {
+    color: #FFFFFF;
+}
+
+.dropdown .btn-catalog.dropdown-toggle::after {
+    content: none;
+}
+
+.dropdown .btn-catalog img {
+    margin-right: 20px;
+}
+
 .navbar-brand-logo__name span {
     color: #86BC6A;
 }
@@ -765,6 +830,90 @@ footer.site-footer {
 
 /*--------------------------------------------------------------
 # DELIVERY
+--------------------------------------------------------------*/
+
+/*--------------------------------------------------------------
+# products-list
+--------------------------------------------------------------*/
+
+.products-list .container {
+    padding-top: 40px;
+    padding-bottom: 40px;
+}
+
+.products-list .products-list__header {
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 22px;
+    color: #000000;
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.card-product {
+    overflow: hidden;
+}
+
+.card-product .card-product__title {
+    font-weight: 300;
+    font-size: 18px;
+    line-height: 24px;
+    color: #000000;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.card-product .card-product__hover {
+    margin-bottom: 9px;
+    transition: 145ms ease-in-out;
+}
+
+.card-product-link:hover .card-product__hover {
+    transform: scale(1.1);
+}
+
+.card-product .card-product__price {
+    text-align: center;
+}
+
+.card-product .card-product__price .now-price {
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 22px;
+    color: #000000;
+}
+
+.card-product .card-product__price .now-price-sale {
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 22px;
+    color: #E15454;
+}
+
+.card-product .card-product__price del {
+    color: #8C8C8C;
+}
+
+.card-product .card-product__price .woocommerce-Price-amount {
+    font-weight: 300;
+    font-size: 18px;
+    line-height: 22px;
+    color: #8C8C8C;
+}
+
+.card-product .card-product__price .sale-badge {
+    font-weight: 800;
+    font-size: 13px;
+    line-height: 16px;
+    background: #86BC6A;
+    border-radius: 13px;
+    color: #FFFFFF;
+    padding: 2px 10px;
+    vertical-align: text-top;
+}
+
+/*--------------------------------------------------------------
+# products-list
 --------------------------------------------------------------*/
 
 /*--------------------------------------------------------------

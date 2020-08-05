@@ -327,6 +327,11 @@ function jk_related_products_args($args)
     return $args;
 }
 
+/**
+ * Render popular products
+ *
+ * @return false|string
+ */
 function get_popular_products()
 {
     $args = array(
@@ -347,20 +352,102 @@ function get_popular_products()
                     $image_id = $product->get_image_id();
                     ?>
                     <div class="col-lg-3 col-12">
-                        <div class="card-products-list">
-                            <div class="card-products-list__header">
-                                <img class="card-products-list-hover"
-                                     src="<?= wp_get_attachment_image_url($image_id, 'full'); ?>"
-                                     alt="<?= $product->name; ?>">
-                                <p class="card-products-list__title"><?= $product->name; ?>
-                                <p class="card-products-list__price"><?= $product->get_price(); ?> ₽</p>
+                        <a class="card-product-link" href="<?= get_permalink($product->id) ?>">
+                            <div class="card-product">
+                                <div class="card-product__header">
+                                    <div class="card-product__hover">
+                                        <img src="<?= wp_get_attachment_image_url($image_id, 'full'); ?>"
+                                             alt="<?= $product->name; ?>">
+                                    </div>
+                                    <p class="card-product__title"><?= $product->name; ?>
+                                    <p class="card-product__price"><?= $product->get_price_html(); ?></p>
+                                </div>
                             </div>
-                        </div>
+                        </a>
                     </div>
                 <?php endforeach; ?>
             </div>
         </div>
     </div>
+    <?php
+    return ob_get_clean();
+}
+
+
+add_filter('woocommerce_get_price_html', 'new_price_html', 100, 2);
+
+/**
+ * Change to custom price html
+ *
+ * @param $price
+ * @param $product
+ * @return string
+ */
+function new_price_html($price, $product)
+{
+    if ($product->regular_price !== $product->price) {
+        $sale = round(100 - $product->price / $product->regular_price * 100);
+        return '<span class="now-price-sale">' . $product->price . '<span class="woocommerce-Price-currencySymbol"> ' . get_woocommerce_currency_symbol() . '</span>' . '</span>' .
+            ' <del> <span class="woocommerce-Price-amount amount">' . $product->regular_price .
+            '<span class="woocommerce-Price-currencySymbol"> ' . get_woocommerce_currency_symbol() . '</span>' . '</span></del>' .
+            ' <span class="sale-badge">' . $sale . '%</span>';
+    } else {
+        return '<span class="now-price">' . $product->price . '<span class="woocommerce-Price-currencySymbol">'
+            . get_woocommerce_currency_symbol() . '</span></span>';
+    }
+}
+
+/**
+ * Render category list for dropdown
+ *
+ * @return false|string
+ */
+function get_categories_list()
+{
+    $args = array(
+        'taxonomy' => "product_cat",
+    );
+    $categories = get_terms($args);
+    ob_start();
+    ?>
+    <ul class="category-list">
+        <?php foreach ($categories as $category):
+            $icon = '';
+            switch ($category->slug) {
+                case 'antique-furniture':
+                    $icon = 'wp-content/themes/storefront-child/svg/category-icons/antique-furniture.svg';
+                    break;
+                case 'chairs':
+                    $icon = 'wp-content/themes/storefront-child/svg/category-icons/chairs.svg';
+                    break;
+                case 'lunch-groups':
+                    $icon = 'wp-content/themes/storefront-child/svg/category-icons/lunch-groups.svg';
+                    break;
+                case 'rattan-furniture':
+                    $icon = 'wp-content/themes/storefront-child/svg/category-icons/rattan-furniture.svg';
+                    break;
+                case 'stools':
+                    $icon = 'wp-content/themes/storefront-child/svg/category-icons/stools.svg';
+                    break;
+                case 'tables':
+                    $icon = 'wp-content/themes/storefront-child/svg/category-icons/tables.svg';
+                    break;
+                case 'tabletops':
+                    $icon = 'wp-content/themes/storefront-child/svg/category-icons/tabletops.svg';
+                    break;
+            }
+            ?>
+            <li>
+                <a href="<?= get_term_link($category->term_id, 'product_cat') ?>">
+                    <img class="category-list__icon"
+                         src="<?= $icon ?>"
+                         alt="<?= $category->name ?>">
+                    <span class="category-list__name"><?= $category->name ?></span>
+                </a>
+            </li>
+        <?php
+        endforeach; ?>
+    </ul>
     <?php
     return ob_get_clean();
 }
