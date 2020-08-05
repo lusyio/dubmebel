@@ -440,7 +440,29 @@ function get_categories_list($type = '')
             }
             ?>
         </div>
-    <?php else: ?>
+    <?php endif;
+
+    if ($type === 'grid'):?>
+        <div class="categories">
+            <div class="container">
+                <div class="categories-grid">
+                    <?php foreach ($categories as $category):
+                        if ($category->parent === 0):
+                            $thumbnail_id = get_term_meta($category->term_id, 'thumbnail_id', true);
+                            $image = wp_get_attachment_url($thumbnail_id); ?>
+                            <div class="categories-grid__item categories-grid__item--<?= $category->slug ?>"
+                                 style="background-image: url('<?= $image ?>')">
+                                <p class="categories-grid__name"><?= $category->name ?></p>
+                                <p class="categories-grid__price">от 4 990 ₽</p>
+                            </div>
+                        <?php endif;
+                    endforeach; ?>
+                </div>
+            </div>
+        </div>
+    <?php
+    endif;
+    if ($type === ''): ?>
         <ul class="dropdown-category-list">
             <?php foreach ($categories as $category):
                 $icon = '';
