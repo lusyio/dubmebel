@@ -470,7 +470,10 @@ footer .navbar-brand-logo {
     display: block;
     color: #757575;
     padding: 5px 8px;
+}
 
+.category-list .subcategory-list li.active a {
+    color: #000;
 }
 
 .new-storefront-breadcrumb .container {

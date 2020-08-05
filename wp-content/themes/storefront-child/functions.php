@@ -685,19 +685,27 @@ function get_categories_with_subcategories($active_cat_ID)
         } else {
             $active = '';
         }
-        $link = get_term_link($product_cat->slug, $product_cat->taxonomy);
-        echo '<li class="' . $active . '"><a href="' . $link . '">' . $product_cat->name . '</a></li>';
         $child_args = array(
             'taxonomy' => 'product_cat',
             'hide_empty' => true,
             'parent' => $product_cat->term_id
         );
         $child_product_cats = get_terms($child_args);
-        if (count($child_product_cats) !== 0 && $active_cat_ID === $product_cat->term_id) {
+        $isChildActive = false;
+        $activeSub = '';
+        foreach ($child_product_cats as $child_product_cat) {
+            if ($active_cat_ID === $child_product_cat->term_id && $product_cat->term_id === $child_product_cat->parent) {
+                $isChildActive = true;
+                $activeSub = 'active';
+            }
+        }
+        $link = get_term_link($product_cat->slug, $product_cat->taxonomy);
+        echo '<li class="' . $active . '"><a href="' . $link . '">' . $product_cat->name . '</a></li>';
+        if ((count($child_product_cats) !== 0 && $active_cat_ID === $product_cat->term_id) || (count($child_product_cats) !== 0 && $isChildActive)) {
             echo '<ul class="subcategory-list">';
             foreach ($child_product_cats as $child_product_cat) {
                 $linkSub = get_term_link($child_product_cat->slug, $child_product_cat->taxonomy);
-                echo '<li><a href="' . $linkSub . '">' . $child_product_cat->name . '</a></li>';
+                echo '<li class="' . $activeSub . '"><a href="' . $linkSub . '">' . $child_product_cat->name . '</a></li>';
             }
             echo '</ul>';
         }
