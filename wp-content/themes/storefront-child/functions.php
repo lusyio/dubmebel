@@ -424,6 +424,7 @@ function get_categories_list($type = '')
                     if ($menu_number < 4) {
                         echo '<li class="mb-lg-3 mb-3"><a href="' . $url . '">' . $title . '</a></li>';
                     } else {
+                        $menu_number = 0;
                         echo '</ul>';
                         echo '</div>';
                         echo '</div>';
