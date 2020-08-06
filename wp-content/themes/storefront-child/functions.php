@@ -25,6 +25,7 @@ function sf_child_theme_dequeue_style()
  */
 function enqueue_child_theme_styles()
 {
+    wp_enqueue_script('jquery');
 // load bootstrap css
     wp_enqueue_style('bootstrap-css', get_stylesheet_directory_uri() . '/inc/assets/css/bootstrap.min.css', false, NULL, 'all');
 // fontawesome cdn
@@ -38,7 +39,6 @@ function enqueue_child_theme_styles()
     }
     wp_enqueue_style('wp-bootstrap-starter-robotoslab-roboto', 'https://fonts.googleapis.com/css?family=Roboto:300,400,700&display=swap');
 
-    wp_enqueue_script('jquery');
 
     // Internet Explorer HTML5 support
     wp_enqueue_script('html5hiv', get_template_directory_uri() . '/inc/assets/js/html5.js', array(), '3.7.0', false);
@@ -871,4 +871,134 @@ function get_delivery_block()
 </div>
 ';
 }
+
+/**
+ * Render product props by product id
+ *
+ * @param $productId
+ * @return false|string
+ */
+function get_product_props($productId = '')
+{
+    if (!$productId) {
+        global $product;
+        $productId = $product->id;
+    }
+
+    $fields = get_field_objects($productId);
+
+
+    ob_start();
+    ?>
+    <div class="col-12">
+        <div class="products-props-list">
+            <p class="products-props-list__title">Характеристики:</p>
+            <div class="row ">
+                <?php foreach ($fields as $field):
+                    if ($field['value'] !== ''):?>
+                        <div class="col-lg-6 col-12">
+                            <p class="products-props-list__item">
+                                <span class="products-props-list__item--label"><?= $field['label'] ?>:</span>
+                                <span class="products-props-list__item--value"><?= $field['value'] ?></span>
+                            </p>
+                        </div>
+                    <?php
+                    endif;
+                endforeach; ?>
+            </div>
+        </div>
+    </div>
+    <?php
+    return ob_get_clean();
+}
+
+// Удаление инлайн-скриптов из хедера
+add_filter('storefront_customizer_css', '__return_false');
+add_filter('storefront_customizer_woocommerce_css', '__return_false');
+add_filter('storefront_gutenberg_block_editor_customizer_css', '__return_false');
+
+add_action('wp_print_styles', function () {
+    wp_styles()->add_data('woocommerce-inline', 'after', '');
+});
+
+add_action('init', function () {
+    remove_action('wp_head', 'wc_gallery_noscript');
+});
+add_action('init', function () {
+    remove_action('wp_head', 'wc_gallery_noscript');
+});
+// Конец удаления инлайн-скриптов из хедера
+
+add_filter('woocommerce_account_menu_items', 'custom_remove_downloads_my_account', 999);
+
+function custom_remove_downloads_my_account($items)
+{
+    unset($items['downloads']);
+    return $items;
+}
+
+add_action('wp_footer', 'custom_quantity_fields_script');
+/**
+ * Custom quantity field
+ */
+function custom_quantity_fields_script()
+{
+    ?>
+    <script type='text/javascript'>
+        jQuery(function ($) {
+            if (!String.prototype.getDecimals) {
+                String.prototype.getDecimals = function () {
+                    let num = this,
+                        match = ('' + num).match(/(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/);
+                    if (!match) {
+                        return 0;
+                    }
+                    return Math.max(0, (match[1] ? match[1].length : 0) - (match[2] ? +match[2] : 0));
+                }
+            }
+            $(document.body).on('click', '.plus, .minus', function () {
+                let $qty = $(this).closest('.quantity').find('.qty'),
+                    currentVal = parseFloat($qty.val()),
+                    max = parseFloat($qty.attr('max')),
+                    min = parseFloat($qty.attr('min')),
+                    step = $qty.attr('step');
+
+                if (!currentVal || currentVal === '' || currentVal === 'NaN') currentVal = 0;
+                if (max === '' || max === 'NaN') max = '';
+                if (min === '' || min === 'NaN') min = 0;
+                if (step === 'any' || step === '' || step === undefined || parseFloat(step) === 'NaN') step = 1;
+
+                if ($(this).is('.plus')) {
+                    if (max && (currentVal >= max)) {
+                        $qty.val(max);
+                    } else {
+                        $qty.val((currentVal + parseFloat(step)).toFixed(step.getDecimals()));
+                    }
+                } else {
+                    if (min && (currentVal <= min)) {
+                        $qty.val(min);
+                    } else if (currentVal > 0) {
+                        $qty.val((currentVal - parseFloat(step)).toFixed(step.getDecimals()));
+                    }
+                }
+
+                // Trigger change event
+                $qty.trigger('change');
+            });
+        });
+    </script>
+    <?php
+}
+
+add_action('wp', 'remove_zoom_lightbox_theme_support', 99);
+
+function remove_zoom_lightbox_theme_support()
+{
+    remove_theme_support('wc-product-gallery-zoom');
+}
+
+remove_action('woocommerce_single_product_summary', 'woocommerce_template_single_meta', 40);
+remove_action('woocommerce_single_product_summary', 'woocommerce_template_single_price', 10);
+add_action('woocommerce_single_product_summary', 'woocommerce_template_single_meta', 10);
+add_action('woocommerce_single_product_summary', 'woocommerce_template_single_price', 15);
 
