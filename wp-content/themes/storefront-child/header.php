@@ -89,12 +89,12 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-4 col-12">
-                    <div class="dropdown show">
+                    <div class="dropdown <?= is_front_page() ? 'show' : '' ?>">
                         <button class="btn btn-catalog dropdown-toggle" type="button" id="dropdownMenuButton"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <img src="/wp-content/themes/storefront-child/svg/catalog.svg" alt=""> Каталог
                         </button>
-                        <div class="dropdown-menu show" aria-labelledby="dropdownMenuButton">
+                        <div class="dropdown-menu <?= is_front_page() ? 'show' : '' ?>" aria-labelledby="dropdownMenuButton">
                             <?= get_categories_list() ?>
                         </div>
                     </div>

@@ -887,29 +887,37 @@ function get_product_props($productId = '')
     }
 
     $fields = get_field_objects($productId);
-
-
+    $empty = true;
+    foreach ($fields as $field) {
+        if ($field['value'] === '') {
+            $empty = true;
+        } else {
+            $empty = false;
+        }
+    }
     ob_start();
-    ?>
-    <div class="col-12">
-        <div class="products-props-list">
-            <p class="products-props-list__title">Характеристики:</p>
-            <div class="row ">
-                <?php foreach ($fields as $field):
-                    if ($field['value'] !== ''):?>
-                        <div class="col-lg-6 col-12">
-                            <p class="products-props-list__item">
-                                <span class="products-props-list__item--label"><?= $field['label'] ?>:</span>
-                                <span class="products-props-list__item--value"><?= $field['value'] ?></span>
-                            </p>
-                        </div>
-                    <?php
-                    endif;
-                endforeach; ?>
+    if (!$empty):
+        ?>
+        <div class="col-12">
+            <div class="products-props-list">
+                <p class="products-props-list__title">Характеристики:</p>
+                <div class="row ">
+                    <?php foreach ($fields as $field):
+                        if ($field['value'] !== ''):?>
+                            <div class="col-lg-6 col-12">
+                                <p class="products-props-list__item">
+                                    <span class="products-props-list__item--label"><?= $field['label'] ?>:</span>
+                                    <span class="products-props-list__item--value"><?= $field['value'] ?></span>
+                                </p>
+                            </div>
+                        <?php
+                        endif;
+                    endforeach; ?>
+                </div>
             </div>
         </div>
-    </div>
     <?php
+    endif;
     return ob_get_clean();
 }
 
@@ -1003,3 +1011,8 @@ remove_action('woocommerce_single_product_summary', 'woocommerce_template_single
 add_action('woocommerce_single_product_summary', 'woocommerce_template_single_meta', 10);
 add_action('woocommerce_single_product_summary', 'woocommerce_template_single_price', 15);
 
+add_filter('woocommerce_sale_flash', 'hide_sale_flash');
+function hide_sale_flash()
+{
+    return false;
+}
