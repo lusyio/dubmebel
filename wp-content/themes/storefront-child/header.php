@@ -56,8 +56,8 @@
                     <img src="/wp-content/themes/storefront-child/svg/main/mail.svg" alt="">
                     <div>
                         <p>
-                            <a href="mailto:<?= idn_to_utf8(get_field('email', 19)) ?>">
-                                <?= idn_to_utf8(get_field('email', 19)) ?>
+                            <a href="mailto:<?= get_field('email', 19) ?>">
+                                <?= get_field('email', 19) ?>
                             </a>
                         </p>
                         <p>по любым вопросам</p>
@@ -94,7 +94,8 @@
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <img src="/wp-content/themes/storefront-child/svg/catalog.svg" alt=""> Каталог
                         </button>
-                        <div class="dropdown-menu <?= is_front_page() ? 'show' : '' ?>" aria-labelledby="dropdownMenuButton">
+                        <div class="dropdown-menu <?= is_front_page() ? 'show' : '' ?>"
+                             aria-labelledby="dropdownMenuButton">
                             <?= get_categories_list() ?>
                         </div>
                     </div>
