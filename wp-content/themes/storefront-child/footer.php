@@ -98,6 +98,29 @@
 
     </div><!-- .col-full -->
 </footer><!-- #colophon -->
+<script src="https://unpkg.com/imask"></script>
+<script>
+    const phoneMask = IMask(
+        document.getElementById('billing_phone'), {
+            mask: '+{7}(000)000-00-00'
+        });
+    jQuery(function ($) {
+
+        $('.single input[type=phone]').on('keyup', function () {
+            let newString = $(this).val().replace(/\D/g, '')
+            const btn = $(this).parents('.single').find('input[type=submit]')
+            if (newString.length === 11) {
+                $(this).removeClass('is-invalid')
+                $(this).addClass('is-valid')
+                btn.prop('disabled', false)
+            } else {
+                $(this).addClass('is-invalid')
+                $(this).removeClass('is-valid')
+                btn.prop('disabled', true)
+            }
+        })
+    })
+</script>
 
 <?php do_action('storefront_after_footer'); ?>
 

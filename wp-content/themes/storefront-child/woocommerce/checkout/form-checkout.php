@@ -28,7 +28,7 @@ if (!$checkout->is_registration_enabled() && $checkout->is_registration_required
 }
 
 ?>
-    <div class="col-lg-6 offset-lg-3 col-12 offset-0">
+    <div class="col-lg-8 offset-lg-2 col-12 offset-0">
         <form name="checkout" method="post" class="checkout woocommerce-checkout"
               action="<?php echo esc_url(wc_get_checkout_url()); ?>" enctype="multipart/form-data">
 
