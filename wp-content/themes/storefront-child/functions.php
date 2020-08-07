@@ -518,6 +518,12 @@ function get_categories_list($type = '')
                         $icon = '/wp-content/themes/storefront-child/svg/category-icons/tabletops.svg';
                         break;
                 }
+                $child_args = array(
+                    'taxonomy' => 'product_cat',
+                    'hide_empty' => true,
+                    'parent' => $category->term_id
+                );
+                $child_product_cats = get_terms($child_args);
                 if ($category->parent === 0):
                     ?>
                     <li>
@@ -530,6 +536,19 @@ function get_categories_list($type = '')
                             </div>
                             <img src="/wp-content/themes/storefront-child/svg/next.svg" alt="">
                         </a>
+                        <?php if (count($child_product_cats) !== 0): ?>
+                            <div class="dropdown-category-list-sublist">
+                                <ul>
+                                    <?php foreach ($child_product_cats as $child_product_cat): ?>
+                                        <li>
+                                            <a href="<?= get_term_link($child_product_cat->term_id, 'product_cat') ?>">
+                                                <?= $child_product_cat->name ?>
+                                            </a>
+                                        </li>
+                                    <?php endforeach; ?>
+                                </ul>
+                            </div>
+                        <?php endif; ?>
                     </li>
                 <?php
                 endif;
