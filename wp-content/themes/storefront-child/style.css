@@ -1361,6 +1361,10 @@ footer.site-footer {
     color: #8C8C8C;
 }
 
+table.cart td.product-name a {
+    color: #000;
+}
+
 .card-product .card-product__price .sale-badge, .product-container .price .sale-badge {
     font-weight: 800;
     font-size: 13px;
