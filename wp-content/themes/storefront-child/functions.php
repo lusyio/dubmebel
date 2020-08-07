@@ -1159,6 +1159,11 @@ function disable_shipping_calc_on_cart($show_shipping)
 
 add_filter('woocommerce_cart_ready_to_calc_shipping', 'disable_shipping_calc_on_cart', 99);
 
+/**
+ * render dellin widget
+ *
+ * @return false|string
+ */
 function get_dellin_widget()
 {
     $cart = WC()->cart->get_cart();
