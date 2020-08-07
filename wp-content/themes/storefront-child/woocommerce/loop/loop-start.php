@@ -36,5 +36,8 @@ $parentCategory = get_term($parentCatsId[0], 'product_cat');
         ?>
     </div>
     <div class="col-lg-9">
-        <p class="category-filter-title">Показаны <?= $activeCat->name ?></p>
+        <?php
+        if ($activeCat->name !== 'product'): ?>
+            <p class="category-filter-title">Показаны <?= $activeCat->name ?></p>
+        <?php endif; ?>
         <div class="row">
