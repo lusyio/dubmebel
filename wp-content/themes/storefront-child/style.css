@@ -820,6 +820,10 @@ footer .credits img {
     border-bottom: 2px solid #fff;
 }
 
+.pagination .page-numbers li .page-numbers.current, .woocommerce-pagination .page-numbers li .page-numbers.current {
+    background: #86BC6A;
+}
+
 .basket-btn__counter {
     background: #86BC6A;
     border: 2px solid #fff;
@@ -834,7 +838,7 @@ footer .credits img {
     height: 18px;
     text-align: center;
     right: -10%;
-    top: 90%;
+    top: 70%;
 }
 
 .woocommerce-product-gallery__wrapper > div img {
@@ -1153,6 +1157,11 @@ html .cart input[type=number].qty::-webkit-inner-spin-button {
 
 .s-header__basket-wr:hover {
     transform: translateY(-5px);
+}
+
+.s-header__basket-wr a {
+    display: block;
+    height: 100%;
 }
 
 .s-header__basket-wr {
