@@ -1162,15 +1162,23 @@ add_filter('woocommerce_cart_ready_to_calc_shipping', 'disable_shipping_calc_on_
 function get_dellin_widget()
 {
     $cart = WC()->cart->get_cart();
+    $weight = 0;
+    $volume = 0;
     foreach ($cart as $cart_item) {
         $productId = $cart_item['product_id'];
         $quantity = $cart_item['quantity'];
-        var_dump(floatval(get_field('product_weight_with_package', $productId)));
-        var_dump(floatval(get_field('package_volume', $productId)));
+        $weight += intval(floatval($quantity) * floatval(get_field('product_weight_with_package', $productId)));
+        $volume += intval(floatval($quantity) * floatval(get_field('package_volume', $productId)));
     }
     ob_start();
     ?>
-
+    <iframe
+            src="https://widgets.dellin.ru/calculator?group1=hide&group3=hide&group4=hide&group5=hide&derival_point=7700000000000000000000000&derival_to_door=off&arrival_to_door=on&sized_weight=<?= $weight ?>&sized_volume=<?= $volume ?>&disabled_calculation=on&insurance=0&package=1"
+            width="332"
+            height="167"
+            scrolling="no"
+            frameborder="0">
+    </iframe>
     <?php
     return ob_get_clean();
 }

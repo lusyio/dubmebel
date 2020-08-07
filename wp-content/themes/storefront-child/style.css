@@ -573,6 +573,91 @@ footer .navbar-brand-logo {
     color: #505050;
 }
 
+.card-contacts {
+    background: #f7f7f7;
+    border-radius: 0;
+    padding: 30px;
+    margin-bottom: 40px;
+}
+
+.contacts img {
+    border-radius: 0;
+    margin-bottom: 40px;
+}
+
+.card-contacts .card-contacts__title {
+    font-weight: normal;
+    font-size: 15px;
+    line-height: 18px;
+    margin-bottom: 12px;
+}
+
+.card-contacts .card-contacts__value, .card-contacts .card-contacts__value a {
+    font-weight: normal;
+    font-size: 13px;
+    line-height: 18px;
+    color: #393939;
+    margin-bottom: 16px;
+}
+
+.card-contacts .card-contacts__value:hover a {
+    color: #86BC6A;
+}
+
+.card-contacts p:last-of-type {
+    margin-bottom: 0;
+}
+
+.contacts__title {
+    font-weight: normal;
+    font-size: 30px;
+    line-height: 36px;
+    color: #000000;
+    text-align: left;
+}
+
+.card-contacts-socials {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-top: 15px;
+}
+
+.card-contacts-socials img {
+    margin-bottom: 0;
+}
+
+.card-contacts-socials .card-contacts-socials__icon {
+    display: flex;
+    margin-right: 8px;
+    width: 38px;
+    height: 38px;
+    justify-content: center;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.card-contacts-socials .card-contacts-socials__icon img {
+    transition: 145ms ease-in-out;
+}
+
+.card-contacts-socials .card-contacts-socials__icon:hover img {
+    transform: scale(1.2);
+}
+
+.card-contacts-socials .card-contacts-socials__vk {
+    background-color: #4b76a8;
+}
+
+.card-contacts-socials .card-contacts-socials__fb {
+    background-color: #3c5a98;
+}
+
+.card-contacts-socials .card-contacts-socials__inst {
+    background: #d6249f;
+    background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+}
+
 .category-list {
     display: block;
     padding: 0 0 4px;

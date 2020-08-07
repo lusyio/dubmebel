@@ -98,12 +98,17 @@
 
     </div><!-- .col-full -->
 </footer><!-- #colophon -->
-<script src="https://unpkg.com/imask"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/imask/6.0.5/imask.min.js"
+        integrity="sha512-0ctiD2feH7vdHZ5jjAKNYts4h+IBRq7Nm5wACMJG1Pj5AQyprSHzX/ijMm77AcLLW5cemQptH+9EcviiKCC0cQ=="
+        crossorigin="anonymous"></script>
 <script>
-    const phoneMask = IMask(
-        document.getElementById('billing_phone'), {
-            mask: '+{7}(000)000-00-00'
-        });
+    if (typeof (document.getElementById('billing_phone')) != 'undefined' && document.getElementById('billing_phone') != null) {
+        const phoneMask = IMask(
+            document.getElementById('billing_phone'), {
+                mask: '+{7}(000)000-00-00'
+            });
+    }
+
     jQuery(function ($) {
 
         $('.single input[type=phone]').on('keyup', function () {
