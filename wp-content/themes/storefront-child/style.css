@@ -292,6 +292,14 @@ header#masthead {
     color: #000000;
 }
 
+.navbar-phone p:first-of-type a:hover, .navbar-email p:first-of-type a:hover {
+    color: #86BC6A;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover {
+    color: #86BC6A !important;
+}
+
 .navbar-phone p:last-of-type, .navbar-email p:last-of-type {
     font-weight: 300;
     font-size: 12px;
@@ -356,6 +364,7 @@ footer .navbar-brand-logo {
     max-height: 400px;
     min-height: 400px;
     object-fit: cover;
+    border-radius: 0;
 }
 
 .flex-control-thumbs {
@@ -371,6 +380,16 @@ footer .navbar-brand-logo {
     list-style: none;
     margin-right: 8px;
     margin-bottom: 8px;
+    padding-top: 8px;
+}
+
+.flex-control-thumbs li:hover {
+    cursor: pointer;
+}
+
+.flex-control-thumbs li .flex-active {
+    outline: 2px solid #86BC6A;
+    border-radius: 0;
 }
 
 .flex-control-thumbs:last-of-type {
@@ -556,6 +575,19 @@ footer .navbar-brand-logo {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    transition: 145ms ease-in-out;
+}
+
+footer .credits:hover img {
+    transform: translateY(-5px);
+}
+
+footer .credits img {
+    transition: 145ms ease-in-out;
+}
+
+.dropdown-category-list li > a:hover {
+    background-color: #F9F9F9;
 }
 
 .dropdown-category-list li > a > img {
@@ -834,6 +866,27 @@ footer .navbar-brand-logo {
     border: 0;
     min-height: 36px;
     padding: 7px 9px;
+    transition: 145ms ease-in-out;
+}
+
+button.cta:hover, button.alt:hover, input[type='button'].cta:hover, input[type='button'].alt:hover, input[type='reset'].cta:hover, input[type='reset'].alt:hover, input[type='submit'].cta:hover, input[type='submit'].alt:hover, .button.cta:hover, .button.alt:hover, .wc-block-grid__products .wc-block-grid__product .wp-block-button__link.cta:hover, .wc-block-grid__products .wc-block-grid__product .wp-block-button__link.alt:hover, .added_to_cart.cta:hover, .added_to_cart.alt:hover {
+    background: #77AB5F;
+}
+
+button:hover, input[type='button']:hover, input[type='reset']:hover, input[type='submit']:hover, .button:hover, .wc-block-grid__products .wc-block-grid__product .wp-block-button__link:hover, .added_to_cart:hover {
+    background: #77AB5F;
+}
+
+.dropdown .btn-catalog:hover {
+    background: #77AB5F;
+}
+
+.dropdown .btn-catalog {
+    transition: 145ms ease-in-out;
+}
+
+#searchBtn:hover {
+    background: #77AB5F;
 }
 
 .search-btn {
@@ -1094,6 +1147,18 @@ html .cart input[type=number].qty::-webkit-inner-spin-button {
     color: #252525;
 }
 
+.s-header__basket-wr:hover {
+    transform: translateY(-5px);
+}
+
+.s-header__basket-wr {
+    transition: 145ms ease-in-out;
+}
+
+.site-info > .footer-phone > a:hover, .site-info > .footer-email > a:hover {
+    color: #86BC6A;
+}
+
 .footer-menu ul {
     list-style-type: none;
     font-weight: normal;
@@ -1267,7 +1332,7 @@ footer.site-footer {
     margin-bottom: 0;
 }
 
-.card-product .card-product__price .now-price {
+.card-product .card-product__price .now-price, .product-container .price .now-price {
     font-weight: 500;
     font-size: 18px;
     line-height: 22px;
@@ -1278,25 +1343,25 @@ footer.site-footer {
     margin-bottom: 60px;
 }
 
-.card-product .card-product__price .now-price-sale {
+.card-product .card-product__price .now-price-sale, .product-container .price .now-price-sale {
     font-weight: normal;
     font-size: 18px;
     line-height: 22px;
     color: #E15454;
 }
 
-.card-product .card-product__price del {
+.card-product .card-product__price del, .product-container .price del {
     color: #8C8C8C;
 }
 
-.card-product .card-product__price .woocommerce-Price-amount {
+.card-product .card-product__price .woocommerce-Price-amount, .product-container .price .woocommerce-Price-amount {
     font-weight: 300;
     font-size: 18px;
     line-height: 22px;
     color: #8C8C8C;
 }
 
-.card-product .card-product__price .sale-badge {
+.card-product .card-product__price .sale-badge, .product-container .price .sale-badge {
     font-weight: 800;
     font-size: 13px;
     line-height: 16px;
@@ -1589,6 +1654,15 @@ html a:hover {
 
 .product-container .product_meta {
     margin-bottom: 16px;
+}
+
+.product-container .product_meta a {
+    color: #86BC6A;
+    transition: 145ms ease-in-out;
+}
+
+.product-container .product_meta a:hover {
+    color: #57844A;
 }
 
 .product-container {
