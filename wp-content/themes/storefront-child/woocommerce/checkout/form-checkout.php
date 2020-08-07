@@ -19,6 +19,8 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+global $cart;
+
 do_action('woocommerce_before_checkout_form', $checkout);
 
 // If checkout registration is disabled and not logged in, the user cannot checkout.
@@ -46,7 +48,9 @@ if (!$checkout->is_registration_enabled() && $checkout->is_registration_required
                     </div>
                 </div>
 
-                <?php do_action('woocommerce_checkout_after_customer_details'); ?>
+                <?php
+                get_dellin_widget($cart);
+                do_action('woocommerce_checkout_after_customer_details'); ?>
 
             <?php endif; ?>
 

@@ -384,45 +384,108 @@ footer .navbar-brand-logo {
 
 .categories-grid {
     display: grid;
-    grid-template-rows: repeat(2, 1fr);
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(3, 1fr);
     grid-column-gap: 0;
     grid-row-gap: 0;
 }
 
 .categories-grid .categories-grid__item {
     border-radius: 0;
-    padding: 45px 50px;
-    background-repeat: no-repeat;
     height: 285px;
+    overflow: hidden;
+    position: relative;
+}
+
+.categories-grid .categories-grid__item > div {
+    padding: 45px 50px;
+    height: 100%;
     background-size: contain;
+    background-repeat: no-repeat;
+    transition: 145ms ease-in-out;
+}
+
+.categories-grid .categories-grid__item > p {
+    position: absolute;
+    top: 50px;
+    left: 45px;
+}
+
+.categories-grid .categories-grid__item > p span {
+    display: block;
+}
+
+.categories-grid .categories-grid__item:hover > div {
+    transform: scale(1.1);
 }
 
 .categories-grid .categories-grid__item--chairs {
-    grid-area: 1 / 1 / 3 / 5;
+    grid-area: 1 / 1 / 2 / 3;
+}
+
+.categories-grid .categories-grid__item--chairs > div {
+    background-position: center;
 }
 
 .categories-grid .categories-grid__item--lunch-groups {
-    grid-area: 1 / 5 / 3 / 11;
+    grid-area: 1 / 3 / 2 / 5;
+
+}
+
+.categories-grid .categories-grid__item--lunch-groups > div {
+    background-size: cover;
+    background-position: bottom;
 }
 
 .categories-grid .categories-grid__item--stools {
-    grid-area: 1 / 12 / 3 / 11;
+    grid-area: 1 / 5 / 3 / 6;
+    height: unset;
 }
 
-.categories-grid .categories-grid__item--rattan-furniture {
-    grid-area: 2 / 6 / 2 / 11;
+.categories-grid .categories-grid__item--stools > div {
+    background-size: cover;
+    background-position: bottom;
 }
 
 .categories-grid .categories-grid__item--tabletops {
-    grid-area: 2 / 1 / 2 / 6;
+    grid-area: 2 / 1 / 3 / 3;
 }
 
-.categories-grid .categories-grid__item--tables {
-    grid-area: 3 / 6 / 3 / 12;
+.categories-grid .categories-grid__item--tabletops > div {
+    background-size: cover;
+    background-position: bottom;
+}
+
+.categories-grid .categories-grid__item--rattan-furniture {
+    grid-area: 2 / 3 / 3 / 5;
+}
+
+.categories-grid .categories-grid__item--rattan-furniture > p span {
+    max-width: 80%;
 }
 
 .categories-grid .categories-grid__item--antique-furniture {
-    grid-area: 3 / 1 / 3 / 12;
+    grid-area: 3 / 1 / 4 / 4;
+}
+
+.categories-grid .categories-grid__item--antique-furniture > div {
+    background-size: cover;
+    background-position: bottom;
+}
+
+.categories-grid .categories-grid__item--antique-furniture > p span,
+.categories-grid .categories-grid__item--tabletops > p span {
+    color: #fff;
+}
+
+.categories-grid .categories-grid__item--tables {
+    grid-area: 3 / 4 / 4 / 6;
+
+}
+
+.categories-grid .categories-grid__item--tables > div {
+    background-size: cover;
+    background-position: bottom;
 }
 
 .categories-grid .categories-grid__name {

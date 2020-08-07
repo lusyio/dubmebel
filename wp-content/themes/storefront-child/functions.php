@@ -475,11 +475,15 @@ function get_categories_list($type = '')
                         if ($category->parent === 0):
                             $thumbnail_id = get_term_meta($category->term_id, 'thumbnail_id', true);
                             $image = wp_get_attachment_url($thumbnail_id); ?>
-                            <div class="categories-grid__item categories-grid__item--<?= $category->slug ?>"
-                                 style="background-image: url('<?= $image ?>')">
-                                <p class="categories-grid__name"><?= $category->name ?></p>
-                                <p class="categories-grid__price">от 4 990 ₽</p>
-                            </div>
+                            <a href="<?= get_term_link($category->term_id, 'product_cat') ?>"
+                               class="categories-grid__item categories-grid__item--<?= $category->slug ?>">
+                                <div style="background-image: url('<?= $image ?>')">
+                                </div>
+                                <p>
+                                    <span class="categories-grid__name"><?= $category->name ?></span>
+                                    <span class="categories-grid__price">от 4 990 ₽</span>
+                                </p>
+                            </a>
                         <?php endif;
                     endforeach; ?>
                 </div>
@@ -1151,4 +1155,22 @@ function disable_shipping_calc_on_cart($show_shipping)
         return false;
     }
     return $show_shipping;
+}
+
+add_filter('woocommerce_cart_ready_to_calc_shipping', 'disable_shipping_calc_on_cart', 99);
+
+function get_dellin_widget()
+{
+    $cart = WC()->cart->get_cart();
+    foreach ($cart as $cart_item) {
+        $productId = $cart_item['product_id'];
+        $quantity = $cart_item['quantity'];
+        var_dump(floatval(get_field('product_weight_with_package', $productId)));
+        var_dump(floatval(get_field('package_volume', $productId)));
+    }
+    ob_start();
+    ?>
+
+    <?php
+    return ob_get_clean();
 }
