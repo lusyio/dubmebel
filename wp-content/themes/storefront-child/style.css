@@ -1342,6 +1342,11 @@ footer.site-footer {
     transition: 145ms ease-in-out;
 }
 
+.card-product .card-product__hover img {
+    height: 255px;
+    object-fit: cover;
+}
+
 .card-product-link:hover .card-product__hover {
     transform: scale(1.1);
 }
