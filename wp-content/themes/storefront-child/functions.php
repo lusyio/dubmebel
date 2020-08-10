@@ -45,8 +45,8 @@ function enqueue_child_theme_styles()
     wp_script_add_data('html5hiv', 'conditional', 'lt IE 9');
 
 // load swiper js and css
-    wp_enqueue_script('wp-swiper-js', get_stylesheet_directory_uri() . '/inc/assets/js/swiper.min.js', array(), '', true);
-    wp_enqueue_style('wp-swiper-js', get_stylesheet_directory_uri() . '/inc/assets/css/swiper.min.css', array(), '', true);
+//    wp_enqueue_script('wp-swiper-js', get_stylesheet_directory_uri() . '/inc/assets/js/swiper.min.js', array(), '', true);
+//    wp_enqueue_style('wp-swiper-js', get_stylesheet_directory_uri() . '/inc/assets/css/swiper.min.css', array(), '', true);
 
 // load bootstrap js
     wp_enqueue_script('wp-bootstrap-starter-popper', get_stylesheet_directory_uri() . '/inc/assets/js/popper.min.js', array(), '', true);
@@ -1216,16 +1216,17 @@ function my_ajax_url()
 add_action('wp_enqueue_scripts', 'my_ajax_url');
 
 // wp_ajax_ - только для зарегистрированных пользователей
-add_action('wp_ajax_adjust_shipping_rate', 'adjust_shipping_rate'); // wp_ajax_{значение параметра action}
+add_action('wp_ajax_delline_delivery_cost_request', 'delline_delivery_cost_request');
+add_action('wp_ajax_adjust_shipping_rate', 'adjust_shipping_rate');
 
 // wp_ajax_nopriv_ - только для незарегистрированных
-add_action('wp_ajax_nopriv_adjust_shipping_rate', 'adjust_shipping_rate'); // wp_ajax_nopriv_{значение параметра action}
+add_action('wp_ajax_nopriv_delline_delivery_cost_request', 'delline_delivery_cost_request');
+add_action('wp_ajax_nopriv_adjust_shipping_rate', 'adjust_shipping_rate');
 
 /**
  * Render dellin widget
  * @return false|string
  * @todo remove this template, add custom
- *
  * @todo add checkbox for street
  */
 function get_dellin_widget()
@@ -1233,49 +1234,52 @@ function get_dellin_widget()
     $cart = WC()->cart->get_cart();
     $weight = 0;
     $volume = 0;
+    $max_weight = 0;
     foreach ($cart as $cart_item) {
         $productId = $cart_item['product_id'];
         $quantity = $cart_item['quantity'];
+        $max_weight = (float)get_field('product_weight_with_package', $productId);
+        if ($max_weight < (float)get_field('product_weight_with_package', $productId)) {
+            $max_weight = (float)get_field('product_weight_with_package', $productId);
+        }
         $weight += (int)((float)$quantity * (float)get_field('product_weight_with_package', $productId));
         $volume += (int)((float)$quantity * (float)get_field('package_volume', $productId));
     }
     ob_start();
     ?>
     <section id="tzTargetCalc">
-    <div id="result_div_id"></div>
     <form id="tzFormCalc" action="" method="post">
         <h3>Город доставки</h3>
-        <p>
-            <label for="moscow">Откуда</label>
-            <input name="moscow" type="text" id="moscow" value="Москва" disabled/>
-        </p>
         <p>
             <label for="city">Куда</label>
             <input name="city" type="text" id="city" list="datalist"
                    placeholder="Населенный пункт" autocomplete="off"/>
         </p>
-        <datalist id="datalist">
-            <!--[if IE]><select><!--<![endif]-->
-            <option>Ангарск</option>
-            <option>Курск</option>
-            <!--[if IE]></select><!--<![endif]-->
-        </datalist>
-        <p><input id="home" name="home" type="checkbox"/> <label for="home">До адреса?</label></p>
-        <h3>Количество слонов</h3>
-        <p><label>Синих слонов</label> <input min="0" name="blue" type="number" placeholder="шт"/></p>
-        <p><label>Зеленых слонов</label> <input min="0" name="green" type="number" placeholder="шт"/></p>
         <p><input type="button" value="Рассчитать стоимость доставки" id="tzUpCalc"
-                  onclick="AjaxFormRequest(<?= $weight ?>, <?= $volume ?>, my_ajaxurl)"/></p>
+                  onclick="ajaxFormRequest(<?= $weight ?>, <?= $volume ?>, <?= $max_weight ?>, my_ajaxurl)"/></p>
     </form>
     <script type="text/javascript">
-        const AjaxFormRequest = (weight, volume, url) => {
+        const ajaxFormRequest = (weight, volume, maxWeight, url) => {
             event.preventDefault()
             jQuery.post({
                 url: url,
                 data: {
-                    action: 'adjust_shipping_rate',
+                    action: 'delline_delivery_cost_request',
                     weight,
+                    maxWeight,
                     volume,
+                }
+            }, res => {
+                console.log(res)
+                changeDeliveryCost(url)
+            })
+        }
+
+        const changeDeliveryCost = (url) => {
+            jQuery.post({
+                url: url,
+                data: {
+                    action: 'adjust_shipping_rate',
                 }
             }, res => {
                 console.log(res)
@@ -1287,32 +1291,22 @@ function get_dellin_widget()
 }
 
 /**
- * Change shipping cost and label
- * @param $rates
- * @return mixed
- * @todo change shipping rate
- * @todo add client data to request
- *
+ * Request to delline for delivery cost
  */
-function adjust_shipping_rate($rates)
+function delline_delivery_cost_request()
 {
-
     $weight = $_POST['weight'];
     $volume = $_POST['volume'];
+    $max_weight = $_POST['maxWeight'];
 
     $data = array(
         "appkey" => "022BC94E-12D2-42C6-B6E5-A7A418A760E1",
         "delivery" => array(
             "deliveryType" => array(
-                "type" => "express"
+                "type" => "auto"
             ),
             "arrival" => array(
                 "variant" => "terminal",
-                "terminalID" => "1",
-                "addressID" => 238577,
-                "address" => array(
-                    "street" => "7800000000008850000000000"
-                ),
                 "city" => "7800000000000000000000000",
                 "time" => array(
                     "worktimeStart" => "9:30",
@@ -1321,21 +1315,10 @@ function adjust_shipping_rate($rates)
                     "breakEnd" => "13:00",
                     "exactTime" => false
                 ),
-                "handling" => array(
-                    "freightLift" => true,
-                    "toFloor" => 2,
-                    "carry" => 50
-                ),
-                "requirements" => array(
-                    "0x9951e0ff97188f6b4b1b153dfde3cfec",
-                    "0x88f93a2c37f106d94ff9f7ada8efe886"
-                )
             ),
             "derival" => array(
-                "produceDate" => "2019-11-08",
+                "produceDate" => "2020-08-11",
                 "variant" => "address",
-                "terminalID" => "1",
-                "addressID" => 238577,
                 "address" => array(
                     "street" => "7700000000003690000000000",
                 ),
@@ -1346,30 +1329,7 @@ function adjust_shipping_rate($rates)
                     "breakEnd" => "13:00",
                     "exactTime" => false
                 ),
-                "handling" => array(
-                    "freightLift" => true,
-                    "toFloor" => 40,
-                    "carry" => 243
-                ),
-                "requirements" => array(
-                    "0x9951e0ff97188f6b4b1b153dfde3cfec",
-                    "0x88f93a2c37f106d94ff9f7ada8efe886"
-                )
             ),
-            "packages" => array(
-                array(
-                    "uid" => "0xa6a7bd2bf950e67f4b2cf7cc3a97c111",
-                    "count" => 1
-                )
-            ),
-            "accompanyingDocuments" => array(
-                array(
-                    "action" => "send"
-                ),
-                array(
-                    "action" => "return"
-                )
-            )
         ),
         "members" => array(
             "requester" => array(
@@ -1378,22 +1338,15 @@ function adjust_shipping_rate($rates)
             )
         ),
         "cargo" => array(
-            "quantity" => 4,
             "length" => 1,
             "width" => 1,
-            "weight" => 12,
+            "weight" => $max_weight,
             "height" => 1,
-            "totalVolume" => 1,
-            "totalWeight" => 12,
+            "totalVolume" => $volume,
+            "totalWeight" => $weight,
             "oversizedWeight" => 0,
             "oversizedVolume" => 0,
-            "freightUID" => "0x82e6000423b423b711da7d15445d42cb",
-            "freightName" => "Автомобильные диски",
-            "hazardClass" => 7.2,
-            "insurance" => array(
-                "statedValue" => 15477.34,
-                "term" => false
-            )
+            "hazardClass" => 0,
         ),
         "payment" => array(
             "paymentCity" => "7700000000000000000000000",
@@ -1411,16 +1364,19 @@ function adjust_shipping_rate($rates)
     $result = curl_exec($ch);
     $obj = json_decode($result, true);
     var_dump($obj);
-
+    $new_rate = 0;
+    setcookie('new_rate', $new_rate, time() + (3600), '/');
     curl_close($ch);
 
-
-//    foreach ($rates as $rate) {
-//        if (($rate->id === 'dellin_shipping_method')) {
-//            $rate->cost = $_COOKIE['shipping_city_cost'];
-//            $rate->label = $_COOKIE['shipping_name'];
-//        }
-//    }
-//    return $rates;
     wp_die();
+}
+
+function adjust_shipping_rate($rates)
+{
+    foreach ($rates as $rate) {
+        if (($rate->id === 'dellin_shipping_method')) {
+            $rate->cost = $_COOKIE['new_rate'];
+        }
+    }
+    return $rates;
 }
