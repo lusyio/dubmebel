@@ -1301,7 +1301,7 @@ function adjust_shipping_rate($rates)
     $volume = $_POST['volume'];
 
     $data = array(
-        "appKey" => "022BC94E-12D2-42C6-B6E5-A7A418A760E1",
+        "appkey" => "022BC94E-12D2-42C6-B6E5-A7A418A760E1",
         "delivery" => array(
             "deliveryType" => array(
                 "type" => "express"
@@ -1402,7 +1402,7 @@ function adjust_shipping_rate($rates)
     );
 
     $json = json_encode($data);
-    $url = ('https://api.dellin.ru/v2/calculator.json ');
+    $url = ('https://api.dellin.ru/v2/calculator.json');
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: application/json"));
     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
