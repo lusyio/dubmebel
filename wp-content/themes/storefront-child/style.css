@@ -786,6 +786,7 @@ footer .credits img {
     margin: 0;
     padding: 0;
     border: 1px solid #F5F5F5;
+    background: #fff;
 }
 
 .dropdown .btn-catalog:focus {
