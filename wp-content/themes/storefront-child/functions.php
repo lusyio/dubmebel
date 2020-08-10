@@ -713,11 +713,11 @@ function get_products_by_category_slug($slug = '')
                     <div class="card-product">
                         <div class="card-product__header">
                             <div class="card-product__hover">
-                                <img src="<?= wp_get_attachment_image_url($image_id, 'full'); ?>"
-                                     alt="<?= $product->name; ?>">
+                                <img src="<?= wp_get_attachment_image_url($image_id, 'full') ?>"
+                                     alt="<?= $product->name ?>">
                             </div>
-                            <p class="card-product__title"><?= $product->name; ?>
-                            <p class="card-product__price"><?= $product->get_price_html(); ?></p>
+                            <p class="card-product__title"><?= $product->name ?>
+                            <p class="card-product__price"><?= $product->get_price_html() ?></p>
                         </div>
                     </div>
                 </a>
@@ -973,14 +973,14 @@ add_filter('storefront_customizer_css', '__return_false');
 add_filter('storefront_customizer_woocommerce_css', '__return_false');
 add_filter('storefront_gutenberg_block_editor_customizer_css', '__return_false');
 
-add_action('wp_print_styles', function () {
+add_action('wp_print_styles', static function () {
     wp_styles()->add_data('woocommerce-inline', 'after', '');
 });
 
-add_action('init', function () {
+add_action('init', static function () {
     remove_action('wp_head', 'wc_gallery_noscript');
 });
-add_action('init', function () {
+add_action('init', static function () {
     remove_action('wp_head', 'wc_gallery_noscript');
 });
 // Конец удаления инлайн-скриптов из хедера
@@ -1131,10 +1131,18 @@ add_action('woocommerce_checkout_update_order_meta', 'save_new_checkout_field');
  */
 function save_new_checkout_field($order_id)
 {
-    if ($_POST['passport-series']) update_post_meta($order_id, '_passport-series', esc_attr($_POST['passport-series']));
-    if ($_POST['passport-number']) update_post_meta($order_id, '_passport-number', esc_attr($_POST['passport-number']));
-    if ($_POST['passport-date']) update_post_meta($order_id, '_passport-date', esc_attr($_POST['passport-date']));
-    if ($_POST['passport-place']) update_post_meta($order_id, '_passport-place', esc_attr($_POST['passport-place']));
+    if ($_POST['passport-series']) {
+        update_post_meta($order_id, '_passport-series', esc_attr($_POST['passport-series']));
+    }
+    if ($_POST['passport-number']) {
+        update_post_meta($order_id, '_passport-number', esc_attr($_POST['passport-number']));
+    }
+    if ($_POST['passport-date']) {
+        update_post_meta($order_id, '_passport-date', esc_attr($_POST['passport-date']));
+    }
+    if ($_POST['passport-place']) {
+        update_post_meta($order_id, '_passport-place', esc_attr($_POST['passport-place']));
+    }
 }
 
 add_action('woocommerce_admin_order_data_after_billing_address', 'show_new_checkout_field_order', 10, 1);
@@ -1145,10 +1153,18 @@ add_action('woocommerce_admin_order_data_after_billing_address', 'show_new_check
 function show_new_checkout_field_order($order)
 {
     $order_id = $order->get_id();
-    if (get_post_meta($order_id, '_passport-series', true)) echo '<p><strong>Серия паспорта:</strong> ' . get_post_meta($order_id, '_passport-series', true) . '</p>';
-    if (get_post_meta($order_id, '_passport-number', true)) echo '<p><strong>Номер паспорта:</strong> ' . get_post_meta($order_id, '_passport-number', true) . '</p>';
-    if (get_post_meta($order_id, '_passport-date', true)) echo '<p><strong>Дата выдачи паспорта:</strong> ' . get_post_meta($order_id, '_passport-date', true) . '</p>';
-    if (get_post_meta($order_id, '_passport-place', true)) echo '<p><strong>Кем выдан паспорт:</strong> ' . get_post_meta($order_id, '_passport-place', true) . '</p>';
+    if (get_post_meta($order_id, '_passport-series', true)) {
+        echo '<p><strong>Серия паспорта:</strong> ' . get_post_meta($order_id, '_passport-series', true) . '</p>';
+    }
+    if (get_post_meta($order_id, '_passport-number', true)) {
+        echo '<p><strong>Номер паспорта:</strong> ' . get_post_meta($order_id, '_passport-number', true) . '</p>';
+    }
+    if (get_post_meta($order_id, '_passport-date', true)) {
+        echo '<p><strong>Дата выдачи паспорта:</strong> ' . get_post_meta($order_id, '_passport-date', true) . '</p>';
+    }
+    if (get_post_meta($order_id, '_passport-place', true)) {
+        echo '<p><strong>Кем выдан паспорт:</strong> ' . get_post_meta($order_id, '_passport-place', true) . '</p>';
+    }
 }
 
 add_action('woocommerce_email_after_order_table', 'show_new_checkout_field_emails', 20, 4);
@@ -1162,10 +1178,18 @@ add_action('woocommerce_email_after_order_table', 'show_new_checkout_field_email
 function show_new_checkout_field_emails($order, $sent_to_admin, $plain_text, $email)
 {
     $order_id = $order->get_id();
-    if (get_post_meta($order_id, '_passport-series', true)) echo '<p><strong>Серия паспорта:</strong> ' . get_post_meta($order_id, '_passport-series', true) . '</p>';
-    if (get_post_meta($order_id, '_passport-number', true)) echo '<p><strong>Номер паспорта:</strong> ' . get_post_meta($order_id, '_passport-number', true) . '</p>';
-    if (get_post_meta($order_id, '_passport-date', true)) echo '<p><strong>Дата выдачи паспорта:</strong> ' . get_post_meta($order_id, '_passport-date', true) . '</p>';
-    if (get_post_meta($order_id, '_passport-place', true)) echo '<p><strong>Кем выдан паспорт:</strong> ' . get_post_meta($order_id, '_passport-place', true) . '</p>';
+    if (get_post_meta($order_id, '_passport-series', true)) {
+        echo '<p><strong>Серия паспорта:</strong> ' . get_post_meta($order_id, '_passport-series', true) . '</p>';
+    }
+    if (get_post_meta($order_id, '_passport-number', true)) {
+        echo '<p><strong>Номер паспорта:</strong> ' . get_post_meta($order_id, '_passport-number', true) . '</p>';
+    }
+    if (get_post_meta($order_id, '_passport-date', true)) {
+        echo '<p><strong>Дата выдачи паспорта:</strong> ' . get_post_meta($order_id, '_passport-date', true) . '</p>';
+    }
+    if (get_post_meta($order_id, '_passport-place', true)) {
+        echo '<p><strong>Кем выдан паспорт:</strong> ' . get_post_meta($order_id, '_passport-place', true) . '</p>';
+    }
 }
 
 function disable_shipping_calc_on_cart($show_shipping)
@@ -1178,10 +1202,32 @@ function disable_shipping_calc_on_cart($show_shipping)
 
 add_filter('woocommerce_cart_ready_to_calc_shipping', 'disable_shipping_calc_on_cart', 99);
 
+
 /**
- * render dellin widget
- *
+ *  Render admin-ajax address in variable 'my_ajaxurl'
+ */
+function my_ajax_url()
+{
+    if (is_page('checkout')) {
+        wp_enqueue_script('my_script_handle', 'MY_JS_URL', array('jquery'));
+        wp_localize_script('my_script_handle', 'my_ajaxurl', admin_url('admin-ajax.php'));
+    }
+}
+
+add_action('wp_enqueue_scripts', 'my_ajax_url');
+
+// wp_ajax_ - только для зарегистрированных пользователей
+add_action('wp_ajax_adjust_shipping_rate', 'adjust_shipping_rate'); // wp_ajax_{значение параметра action}
+
+// wp_ajax_nopriv_ - только для незарегистрированных
+add_action('wp_ajax_nopriv_adjust_shipping_rate', 'adjust_shipping_rate'); // wp_ajax_nopriv_{значение параметра action}
+
+/**
+ * Render dellin widget
  * @return false|string
+ * @todo remove this template, add custom
+ *
+ * @todo add checkbox for street
  */
 function get_dellin_widget()
 {
@@ -1191,18 +1237,191 @@ function get_dellin_widget()
     foreach ($cart as $cart_item) {
         $productId = $cart_item['product_id'];
         $quantity = $cart_item['quantity'];
-        $weight += intval(floatval($quantity) * floatval(get_field('product_weight_with_package', $productId)));
-        $volume += intval(floatval($quantity) * floatval(get_field('package_volume', $productId)));
+        $weight += (int)((float)$quantity * (float)get_field('product_weight_with_package', $productId));
+        $volume += (int)((float)$quantity * (float)get_field('package_volume', $productId));
     }
     ob_start();
     ?>
-    <iframe
-            src="https://widgets.dellin.ru/calculator?group1=hide&group3=hide&group4=hide&group5=hide&derival_point=7700000000000000000000000&derival_to_door=off&arrival_to_door=on&sized_weight=<?= $weight ?>&sized_volume=<?= $volume ?>&disabled_calculation=on&insurance=0&package=1"
-            width="332"
-            height="167"
-            scrolling="no"
-            frameborder="0">
-    </iframe>
+    <section id="tzTargetCalc">
+    <div id="result_div_id"></div>
+    <form id="tzFormCalc" action="" method="post">
+        <h3>Город доставки</h3>
+        <p>
+            <label for="moscow">Откуда</label>
+            <input name="moscow" type="text" id="moscow" value="Москва" disabled/>
+        </p>
+        <p>
+            <label for="city">Куда</label>
+            <input name="city" type="text" id="city" list="datalist"
+                   placeholder="Населенный пункт" autocomplete="off"/>
+        </p>
+        <datalist id="datalist">
+            <!--[if IE]><select><!--<![endif]-->
+            <option>Ангарск</option>
+            <option>Курск</option>
+            <!--[if IE]></select><!--<![endif]-->
+        </datalist>
+        <p><input id="home" name="home" type="checkbox"/> <label for="home">До адреса?</label></p>
+        <h3>Количество слонов</h3>
+        <p><label>Синих слонов</label> <input min="0" name="blue" type="number" placeholder="шт"/></p>
+        <p><label>Зеленых слонов</label> <input min="0" name="green" type="number" placeholder="шт"/></p>
+        <p><input type="button" value="Рассчитать стоимость доставки" id="tzUpCalc"
+                  onclick="AjaxFormRequest(<?= $weight ?>, <?= $volume ?>, my_ajaxurl)"/></p>
+    </form>
+    <script type="text/javascript">
+        const AjaxFormRequest = (weight, volume, url) => {
+            event.preventDefault()
+            jQuery.post({
+                url: url,
+                data: {
+                    action: 'adjust_shipping_rate',
+                    weight,
+                    volume,
+                }
+            }, res => {
+                console.log(res)
+            })
+        }
+    </script>
     <?php
     return ob_get_clean();
+}
+
+/**
+ * Change shipping cost and label
+ * @param $rates
+ * @return mixed
+ * @todo change shipping rate
+ * @todo add client data to request
+ *
+ */
+function adjust_shipping_rate($rates)
+{
+
+    $weight = $_POST['weight'];
+    $volume = $_POST['volume'];
+
+    $code = '';
+    $data = array(
+        "appKey" => "022BC94E-12D2-42C6-B6E5-A7A418A760E1",
+        "sessionID" => "айди_сессии",
+        "delivery" => array(
+            "deliveryType" => array(
+                "type" => "express"
+            ),
+            "arrival" => array(
+                "variant" => "terminal",
+                "terminalID" => "1",
+                "addressID" => 238577,
+                "address" => array(
+                    "street" => "7800000000008850000000000"
+                ),
+                "city" => "7800000000000000000000000",
+                "time" => array(
+                    "worktimeStart" => "9:30",
+                    "worktimeEnd" => "19:00",
+                    "breakStart" => "12:00",
+                    "breakEnd" => "13:00",
+                    "exactTime" => false
+                ),
+                "handling" => array(
+                    "freightLift" => true,
+                    "toFloor" => 2,
+                    "carry" => 50
+                ),
+                "requirements" => array(
+                    "0x9951e0ff97188f6b4b1b153dfde3cfec",
+                    "0x88f93a2c37f106d94ff9f7ada8efe886"
+                )
+            ),
+            "derival" => array(
+                "produceDate" => "2019-11-08",
+                "variant" => "address",
+                "terminalID" => "1",
+                "addressID" => 238577,
+                "address" => array(
+                    "street" => "7700000000003690000000000",
+                ),
+                "time" => array(
+                    "worktimeEnd" => "19:30",
+                    "worktimeStart" => "9:00",
+                    "breakStart" => "12:00",
+                    "breakEnd" => "13:00",
+                    "exactTime" => false
+                ),
+                "handling" => array(
+                    "freightLift" => true,
+                    "toFloor" => 40,
+                    "carry" => 243
+                ),
+                "requirements" => array(
+                    "0x9951e0ff97188f6b4b1b153dfde3cfec",
+                    "0x88f93a2c37f106d94ff9f7ada8efe886"
+                )
+            ),
+            "packages" => array(
+                array(
+                    "uid" => "0xa6a7bd2bf950e67f4b2cf7cc3a97c111",
+                    "count" => 1
+                )
+            ),
+            "accompanyingDocuments" => array(
+                array(
+                    "action" => "send"
+                ),
+                array(
+                    "action" => "return"
+                )
+            )
+        ),
+        "members" => array(
+            "requester" => array(
+                "role" => "sender",
+                "uid" => "ae62f076-d602-4341-b691-45bf8dfe4a10"
+            )
+        ),
+        "cargo" => array(
+            "quantity" => 4,
+            "length" => 1,
+            "width" => 1,
+            "weight" => 12,
+            "height" => 1,
+            "totalVolume" => 1,
+            "totalWeight" => 12,
+            "oversizedWeight" => 0,
+            "oversizedVolume" => 0,
+            "freightUID" => "0x82e6000423b423b711da7d15445d42cb",
+            "freightName" => "Автомобильные диски",
+            "hazardClass" => 7.2,
+            "insurance" => array(
+                "statedValue" => 15477.34,
+                "term" => false
+            )
+        ),
+        "payment" => array(
+            "paymentCity" => "7700000000000000000000000",
+            "type" => "cash"
+        ),
+    );
+
+    $json = json_encode($data);
+    $url = ('https://api.dellin.ru/v2/calculator.json ');
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: application/json"));
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $result = curl_exec($ch);
+    $obj = json_decode($result, true);
+    var_dump($obj);
+    curl_close($ch);
+
+//    foreach ($rates as $rate) {
+//        if (($rate->id === 'dellin_shipping_method')) {
+//            $rate->cost = $_COOKIE['shipping_city_cost'];
+//            $rate->label = $_COOKIE['shipping_name'];
+//        }
+//    }
+//    return $rates;
+    wp_die();
 }
