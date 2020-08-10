@@ -581,14 +581,13 @@ function get_post_gallery_images_with_info($postvar = NULL, $pos = 0)
     $image_gallery_with_info = array();
     foreach ($images_id as $image_id) {
         $attachment = get_post($image_id);
-        array_push($image_gallery_with_info, array(
-                'alt' => get_post_meta($attachment->ID, '_wp_attachment_image_alt', true),
-                'caption' => $attachment->post_excerpt,
-                'description' => $attachment->post_content,
-                'href' => get_permalink($attachment->ID),
-                'src' => $attachment->guid,
-                'title' => $attachment->post_title
-            )
+        $image_gallery_with_info[] = array(
+            'alt' => get_post_meta($attachment->ID, '_wp_attachment_image_alt', true),
+            'caption' => $attachment->post_excerpt,
+            'description' => $attachment->post_content,
+            'href' => get_permalink($attachment->ID),
+            'src' => $attachment->guid,
+            'title' => $attachment->post_title
         );
     }
     return $image_gallery_with_info;
@@ -1210,7 +1209,7 @@ function my_ajax_url()
 {
     if (is_page('checkout')) {
         wp_enqueue_script('my_script_handle', 'MY_JS_URL', array('jquery'));
-        wp_localize_script('my_script_handle', 'my_ajaxurl', admin_url('admin-ajax.php'));
+        wp_localize_script('my_script_handle', 'my_ajaxurl', (array)admin_url('admin-ajax.php'));
     }
 }
 
@@ -1301,10 +1300,8 @@ function adjust_shipping_rate($rates)
     $weight = $_POST['weight'];
     $volume = $_POST['volume'];
 
-    $code = '';
     $data = array(
         "appKey" => "022BC94E-12D2-42C6-B6E5-A7A418A760E1",
-        "sessionID" => "айди_сессии",
         "delivery" => array(
             "deliveryType" => array(
                 "type" => "express"
@@ -1414,7 +1411,9 @@ function adjust_shipping_rate($rates)
     $result = curl_exec($ch);
     $obj = json_decode($result, true);
     var_dump($obj);
+
     curl_close($ch);
+
 
 //    foreach ($rates as $rate) {
 //        if (($rate->id === 'dellin_shipping_method')) {
