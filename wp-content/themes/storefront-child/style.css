@@ -755,6 +755,11 @@ footer .credits img {
     display: none;
 }
 
+#order_review #payment .place-order {
+    padding: 0;
+    text-align: center;
+}
+
 .category-filter-title {
     font-size: 24px;
     line-height: 29px;

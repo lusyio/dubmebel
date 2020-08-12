@@ -1342,7 +1342,7 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
     add_action('wp_ajax_adjust_shipping_rate', 'adjust_shipping_rate');
     add_action('wp_ajax_get_city_list', 'get_city_list');
 
-// wp_ajax_nopriv_ - только для незарегистрированных
+    // wp_ajax_nopriv_ - только для незарегистрированных
     add_action('wp_ajax_nopriv_delline_delivery_cost_request', 'delline_delivery_cost_request');
     add_action('wp_ajax_nopriv_adjust_shipping_rate', 'adjust_shipping_rate');
     add_action('wp_ajax_nopriv_get_city_list', 'get_city_list');
@@ -1358,9 +1358,12 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
         $weight = 0;
         $volume = 0;
         $max_weight = 0;
+        $total_price = 0;
         foreach ($cart as $cart_item) {
             $productId = $cart_item['product_id'];
             $quantity = $cart_item['quantity'];
+            $price = $cart_item['data']->price;
+            $total_price += (float)$quantity * (float)$price;
             $max_weight = (float)get_field('product_weight_with_package', $productId);
             if ($max_weight < (float)get_field('product_weight_with_package', $productId)) {
                 $max_weight = (float)get_field('product_weight_with_package', $productId);
@@ -1368,13 +1371,14 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
             $weight += ((float)$quantity * (float)get_field('product_weight_with_package', $productId));
             $volume += ((float)$quantity * (float)get_field('package_volume', $productId));
         }
-        ob_start();
-        ?>
-        <p class="form-row form-row-wide address-field validate-required" id="billing_address_1_field"
-           data-priority="50">
-            <label for="cityList" class="">
-                Куда&nbsp;<abbr class="required" title="обязательно">*</abbr></label>
-            <span class="woocommerce-input-wrapper">
+        if ($total_price < 20000):
+            ob_start();
+            ?>
+            <p class="form-row form-row-wide address-field validate-required" id="billing_address_1_field"
+               data-priority="50">
+                <label for="cityList" class="">
+                    Куда&nbsp;<abbr class="required" title="обязательно">*</abbr></label>
+                <span class="woocommerce-input-wrapper">
                   <input name="city" type="text" id="cityList" list="datalist"
                          placeholder="Населенный пункт" autocomplete="off"
                          data-weight="<?= $weight ?>" data-volume="<?= $volume ?>"
@@ -1383,81 +1387,84 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
                     <datalist id="datalist">
                     </datalist>
             </span>
-        </p>
-        <script type="text/javascript">
-            jQuery($ => {
-                let cityListEl = $('#cityList');
-                cityListEl.on('keyup', function () {
-                    let q = $(this).val()
-                    if (q.length > 2) {
-                        jQuery.post({
-                            url: my_ajaxurl,
-                            data: {
-                                action: "get_city_list",
-                                q: q
-                            }
-                        }, res => {
-                            const $obj = $.parseJSON(res)
-                            $(this).next('datalist').html('')
-                            $obj.cities.map(item => {
-                                $(this).next('datalist').append('<option value="' + item.code + '">' + item.aString + '</option>')
+            </p>
+            <script type="text/javascript">
+                jQuery($ => {
+                    let cityListEl = $('#cityList');
+                    cityListEl.on('keyup', function () {
+                        let q = $(this).val()
+                        if (q.length > 2) {
+                            jQuery.post({
+                                url: my_ajaxurl,
+                                data: {
+                                    action: "get_city_list",
+                                    q: q
+                                }
+                            }, res => {
+                                const obj = $.parseJSON(res)
+                                $(this).next('datalist').html('')
+                                obj.cities.map(item => {
+                                    $(this).next('datalist').append('<option value="' + item.code + '">' + item.aString + '</option>')
+                                })
                             })
-                        })
-                    }
+                        }
+                    })
+
+                    cityListEl.on('focusout', function () {
+                        const weight = $(this).data('weight')
+                        const volume = $(this).data('volume')
+                        const maxWeight = $(this).data('maxweight')
+                        const cityCode = $(this).val()
+                        if (!isNaN(parseInt(cityCode))) {
+                            ajaxFormRequest(weight, volume, maxWeight, cityCode, my_ajaxurl)
+                        } else {
+                            /**
+                             * @todo Сделать оформления, если населенный пункт не выбран из загруженного списка
+                             */
+                            console.log('Выберите населенный пункт из списка')
+                        }
+                    })
                 })
 
-                cityListEl.on('focusout', function () {
-                    const weight = $(this).data('weight')
-                    const volume = $(this).data('volume')
-                    const maxWeight = $(this).data('maxweight')
-                    const cityCode = $(this).val()
-                    if (!isNaN(parseInt(cityCode))) {
-                        ajaxFormRequest(weight, volume, maxWeight, cityCode, my_ajaxurl)
-                    } else {
+
+                const ajaxFormRequest = (weight, volume, maxWeight, cityCode, url) => {
+                    jQuery.post({
+                        url: url,
+                        data: {
+                            action: 'delline_delivery_cost_request',
+                            weight,
+                            volume,
+                            maxWeight,
+                            cityCode
+                        }
+                    }, res => {
+                        changeDeliveryCost(url)
+                    })
+                }
+
+                const changeDeliveryCost = (url) => {
+                    console.log('Смена стоимости')
+                    jQuery.post({
+                        url: url,
+                        data: {
+                            action: 'adjust_shipping_rate',
+                        }
+                    }, res => {
                         /**
-                         * @todo Сделать оформления, если населенный пункт не выбран из загруженного списка
+                         * Update delivery info
                          */
-                        console.log('Выберите населенный пункт из списка')
-                    }
-                })
-            })
-
-
-            const ajaxFormRequest = (weight, volume, maxWeight, cityCode, url) => {
-                jQuery.post({
-                    url: url,
-                    data: {
-                        action: 'delline_delivery_cost_request',
-                        weight,
-                        volume,
-                        maxWeight,
-                        cityCode
-                    }
-                }, res => {
-                    changeDeliveryCost(url)
-                })
-            }
-
-            const changeDeliveryCost = (url) => {
-                console.log('Смена стоимости')
-                jQuery.post({
-                    url: url,
-                    data: {
-                        action: 'adjust_shipping_rate',
-                    }
-                }, res => {
-                    /**
-                     * Update delivery info
-                     */
-                    let input = jQuery('#billing_address_1');
-                    let text = input.val().trim();
-                    input.val(text + 'delline' + Math.random());
-                    jQuery(document.body).trigger('update_checkout');
-                })
-            }
-        </script>
-        <?php
-        return ob_get_clean();
+                        let input = jQuery('#billing_address_1');
+                        let text = input.val().trim();
+                        input.val(text + 'delline' + Math.random());
+                        jQuery(document.body).trigger('update_checkout');
+                    })
+                }
+            </script>
+            <?php
+            return ob_get_clean();
+        else:
+            return false;
+        endif;
     }
 
     /**
@@ -1481,15 +1488,13 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
                     "type" => "auto"
                 ),
                 "arrival" => array(
-                    "variant" => "terminal",
-                    "city" => "7800000000000000000000000",
+                    "variant" => "address",
+                    "city" => $city_code,
                 ),
                 "derival" => array(
                     "produceDate" => date("Y-m-d", time() + 86400 * 7),
-                    "variant" => "address",
-                    "address" => array(
-                        "street" => $city_code,
-                    ),
+                    "variant" => "terminal",
+                    "city" => $city_code,
                     "time" => array(
                         "worktimeEnd" => "19:30",
                         "worktimeStart" => "9:00",
