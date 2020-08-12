@@ -1370,13 +1370,11 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
         }
         ob_start();
         ?>
-        <section id="tzTargetCalc">
-        <form id="tzFormCalc" action="" method="post">
-            <p class="form-row form-row-wide address-field validate-required" id="billing_address_1_field"
-               data-priority="50">
-                <label for="cityList" class="">
-                    Куда&nbsp;<abbr class="required" title="обязательно">*</abbr></label>
-                <span class="woocommerce-input-wrapper">
+        <p class="form-row form-row-wide address-field validate-required" id="billing_address_1_field"
+           data-priority="50">
+            <label for="cityList" class="">
+                Куда&nbsp;<abbr class="required" title="обязательно">*</abbr></label>
+            <span class="woocommerce-input-wrapper">
                   <input name="city" type="text" id="cityList" list="datalist"
                          placeholder="Населенный пункт" autocomplete="off"
                          data-weight="<?= $weight ?>" data-volume="<?= $volume ?>"
@@ -1385,12 +1383,7 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
                     <datalist id="datalist">
                     </datalist>
             </span>
-            </p>
-            <p>
-                <input type="button" value="Рассчитать доставку" id="tzUpCalc"
-                       onclick="ajaxFormRequest()"/
-            </p>
-        </form>
+        </p>
         <script type="text/javascript">
             jQuery($ => {
                 let cityListEl = $('#cityList');
