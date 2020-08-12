@@ -415,10 +415,10 @@ function new_price_html($price, $product)
             ' <del> <span class="woocommerce-Price-amount amount">' . $product->regular_price .
             '<span class="woocommerce-Price-currencySymbol"> ' . get_woocommerce_currency_symbol() . '</span>' . '</span></del>' .
             ' <span class="sale-badge">' . $sale . '%</span>';
-    } else {
-        return '<span class="now-price">' . $product->price . '<span class="woocommerce-Price-currencySymbol">'
-            . get_woocommerce_currency_symbol() . '</span></span>';
     }
+
+    return '<span class="now-price">' . $product->price . '<span class="woocommerce-Price-currencySymbol">'
+        . get_woocommerce_currency_symbol() . '</span></span>';
 }
 
 /**
@@ -1414,6 +1414,9 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
                     if (!isNaN(parseInt(cityCode))) {
                         ajaxFormRequest(weight, volume, maxWeight, cityCode, my_ajaxurl)
                     } else {
+                        /**
+                         * @todo Сделать оформления, если населенный пункт не выбран из загруженного списка
+                         */
                         console.log('Выберите населенный пункт из списка')
                     }
                 })
@@ -1431,7 +1434,6 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
                         cityCode
                     }
                 }, res => {
-                    console.log(res)
                     changeDeliveryCost(url)
                 })
             }
@@ -1444,6 +1446,9 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
                         action: 'adjust_shipping_rate',
                     }
                 }, res => {
+                    /**
+                     * Update delivery info
+                     */
                     let input = jQuery('#billing_address_1');
                     let text = input.val().trim();
                     input.val(text + 'delline' + Math.random());
@@ -1465,9 +1470,9 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
         $max_weight = $_POST['maxWeight'];
         $city_code = $_POST['cityCode'];
 
-        var_dump("вес", $weight);
-        var_dump("объем", $volume);
-        var_dump("вес самого большого", $max_weight);
+//        var_dump("вес", $weight);
+//        var_dump("объем", $volume);
+//        var_dump("вес самого большого", $max_weight);
 
         $data = array(
             "appkey" => "022BC94E-12D2-42C6-B6E5-A7A418A760E1",
