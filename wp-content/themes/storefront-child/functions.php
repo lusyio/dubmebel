@@ -1215,168 +1215,377 @@ function my_ajax_url()
 
 add_action('wp_enqueue_scripts', 'my_ajax_url');
 
-// wp_ajax_ - только для зарегистрированных пользователей
-add_action('wp_ajax_delline_delivery_cost_request', 'delline_delivery_cost_request');
-add_action('wp_ajax_adjust_shipping_rate', 'adjust_shipping_rate');
+/**
+ * Check if WooCommerce is active
+ */
+if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_option('active_plugins')), true)) {
+
+    /**
+     *  init delline method
+     */
+    function delline_shipping_method_init()
+    {
+        if (!class_exists('WC_delline_Shipping_Method')) {
+            class WC_delline_Shipping_Method extends WC_Shipping_Method
+            {
+
+                /**
+                 * Constructor for your shipping class
+                 *
+                 * @access public
+                 * @return void
+                 */
+                public function __construct()
+                {
+                    $this->id = 'delline_shipping_method'; // Id for your shipping method. Should be uunique.
+                    $this->method_title = __('delline Shipping Method');  // Title shown in admin
+                    $this->method_description = __('Description of delline shipping method'); // Description shown in admin
+
+                    $this->init();
+
+                    $this->enabled = isset($this->settings['enabled']) ? $this->settings['enabled'] : 'yes';
+                    $this->title = isset($this->settings['title']) ? $this->settings['title'] : __('delline Shipping');
+                    $this->priceSet = isset($this->settings['priceSet']) ? $this->settings['priceSet'] : 405;
+
+
+                    if ($this->enabled === 'yes') {
+                        add_action('woocommerce_checkout_before_order_review', 'delline_html_on');
+                    }
+                }
+
+                /**
+                 * Init your settings
+                 *
+                 * @access public
+                 * @return void
+                 */
+                public function init()
+                {
+                    // Load the settings API
+                    $this->init_form_fields(); // This is part of the settings API. Override the method to add your own settings
+                    $this->init_settings(); // This is part of the settings API. Loads settings you previously init.
+
+                    // Save settings in admin if you have any defined
+                    add_action('woocommerce_update_options_shipping_' . $this->id, array($this, 'process_admin_options'));
+                }
+
+                /**
+                 * Define settings field for this shipping
+                 * @return void
+                 */
+                public function init_form_fields()
+                {
+
+                    $this->form_fields = array(
+
+                        'enabled' => array(
+                            'title' => __('Enable'),
+                            'type' => 'checkbox',
+                            'description' => __('Enable this shipping.'),
+                            'default' => 'yes'
+                        ),
+                        'title' => array(
+                            'title' => __('Title'),
+                            'type' => 'text',
+                            'description' => __('Title to be display on site'),
+                            'default' => __('delline Shipping')
+                        ),
+                        'priceSet' => array(
+                            'title' => __('Delivery cost'),
+                            'type' => 'text',
+                            'description' => __('Default delivery cost'),
+                            'default' => __('405')
+                        ),
+                    );
+                }
+
+                /**
+                 * calculate_shipping function.
+                 *
+                 * @access public
+                 * @param mixed $package
+                 * @return void
+                 */
+                public function calculate_shipping($package)
+                {
+                    $rate = array(
+                        'id' => $this->id,
+                        'label' => $this->title,
+                        'cost' => $this->priceSet,
+                    );
+
+                    // Register the rate
+                    $this->add_rate($rate);
+                }
+            }
+        }
+    }
+
+    add_action('woocommerce_shipping_init', 'delline_shipping_method_init');
+
+    /**
+     * add delline shipping method
+     *
+     * @param $methods
+     * @return mixed
+     */
+    function add_delline_shipping_method($methods)
+    {
+        $methods['delline_shipping_method'] = 'WC_delline_Shipping_Method';
+        return $methods;
+    }
+
+    add_filter('woocommerce_shipping_methods', 'add_delline_shipping_method');
+
+    // wp_ajax_ - только для зарегистрированных пользователей
+    add_action('wp_ajax_delline_delivery_cost_request', 'delline_delivery_cost_request');
+    add_action('wp_ajax_adjust_shipping_rate', 'adjust_shipping_rate');
+    add_action('wp_ajax_get_city_list', 'get_city_list');
 
 // wp_ajax_nopriv_ - только для незарегистрированных
-add_action('wp_ajax_nopriv_delline_delivery_cost_request', 'delline_delivery_cost_request');
-add_action('wp_ajax_nopriv_adjust_shipping_rate', 'adjust_shipping_rate');
+    add_action('wp_ajax_nopriv_delline_delivery_cost_request', 'delline_delivery_cost_request');
+    add_action('wp_ajax_nopriv_adjust_shipping_rate', 'adjust_shipping_rate');
+    add_action('wp_ajax_nopriv_get_city_list', 'get_city_list');
 
-/**
- * Render dellin widget
- * @return false|string
- * @todo remove this template, add custom
- * @todo add checkbox for street
- */
-function get_dellin_widget()
-{
-    $cart = WC()->cart->get_cart();
-    $weight = 0;
-    $volume = 0;
-    $max_weight = 0;
-    foreach ($cart as $cart_item) {
-        $productId = $cart_item['product_id'];
-        $quantity = $cart_item['quantity'];
-        $max_weight = (float)get_field('product_weight_with_package', $productId);
-        if ($max_weight < (float)get_field('product_weight_with_package', $productId)) {
+    /**
+     * Render dellin widget
+     * @return false|string
+     * @todo add checkbox for street
+     */
+    function get_dellin_widget()
+    {
+        $cart = WC()->cart->get_cart();
+        $weight = 0;
+        $volume = 0;
+        $max_weight = 0;
+        foreach ($cart as $cart_item) {
+            $productId = $cart_item['product_id'];
+            $quantity = $cart_item['quantity'];
             $max_weight = (float)get_field('product_weight_with_package', $productId);
+            if ($max_weight < (float)get_field('product_weight_with_package', $productId)) {
+                $max_weight = (float)get_field('product_weight_with_package', $productId);
+            }
+            $weight += ((float)$quantity * (float)get_field('product_weight_with_package', $productId));
+            $volume += ((float)$quantity * (float)get_field('package_volume', $productId));
         }
-        $weight += (int)((float)$quantity * (float)get_field('product_weight_with_package', $productId));
-        $volume += (int)((float)$quantity * (float)get_field('package_volume', $productId));
-    }
-    ob_start();
-    ?>
-    <section id="tzTargetCalc">
-    <form id="tzFormCalc" action="" method="post">
-        <h3>Город доставки</h3>
-        <p>
-            <label for="city">Куда</label>
-            <input name="city" type="text" id="city" list="datalist"
-                   placeholder="Населенный пункт" autocomplete="off"/>
-        </p>
-        <p><input type="button" value="Рассчитать стоимость доставки" id="tzUpCalc"
-                  onclick="ajaxFormRequest(<?= $weight ?>, <?= $volume ?>, <?= $max_weight ?>, my_ajaxurl)"/></p>
-    </form>
-    <script type="text/javascript">
-        const ajaxFormRequest = (weight, volume, maxWeight, url) => {
-            event.preventDefault()
-            jQuery.post({
-                url: url,
-                data: {
-                    action: 'delline_delivery_cost_request',
-                    weight,
-                    maxWeight,
-                    volume,
-                }
-            }, res => {
-                console.log(res)
-                changeDeliveryCost(url)
+        ob_start();
+        ?>
+        <section id="tzTargetCalc">
+        <form id="tzFormCalc" action="" method="post">
+            <p class="form-row form-row-wide address-field validate-required" id="billing_address_1_field"
+               data-priority="50">
+                <label for="cityList" class="">
+                    Куда&nbsp;<abbr class="required" title="обязательно">*</abbr></label>
+                <span class="woocommerce-input-wrapper">
+                  <input name="city" type="text" id="cityList" list="datalist"
+                         placeholder="Населенный пункт" autocomplete="off"
+                         data-weight="<?= $weight ?>" data-volume="<?= $volume ?>"
+                         data-maxweight="<?= $max_weight ?>"
+                  />
+                    <datalist id="datalist">
+                    </datalist>
+            </span>
+            </p>
+            <p>
+                <input type="button" value="Рассчитать доставку" id="tzUpCalc"
+                       onclick="ajaxFormRequest()"/
+            </p>
+        </form>
+        <script type="text/javascript">
+            jQuery($ => {
+                let cityListEl = $('#cityList');
+                cityListEl.on('keyup', function () {
+                    let q = $(this).val()
+                    if (q.length > 2) {
+                        jQuery.post({
+                            url: my_ajaxurl,
+                            data: {
+                                action: "get_city_list",
+                                q: q
+                            }
+                        }, res => {
+                            const $obj = $.parseJSON(res)
+                            $(this).next('datalist').html('')
+                            $obj.cities.map(item => {
+                                $(this).next('datalist').append('<option value="' + item.code + '">' + item.aString + '</option>')
+                            })
+                        })
+                    }
+                })
+
+                cityListEl.on('focusout', function () {
+                    const weight = $(this).data('weight')
+                    const volume = $(this).data('volume')
+                    const maxWeight = $(this).data('maxweight')
+                    const cityCode = $(this).val()
+                    if (!isNaN(parseInt(cityCode))) {
+                        ajaxFormRequest(weight, volume, maxWeight, cityCode, my_ajaxurl)
+                    } else {
+                        console.log('Выберите населенный пункт из списка')
+                    }
+                })
             })
-        }
 
-        const changeDeliveryCost = (url) => {
-            jQuery.post({
-                url: url,
-                data: {
-                    action: 'adjust_shipping_rate',
-                }
-            }, res => {
-                console.log(res)
-            })
-        }
-    </script>
-    <?php
-    return ob_get_clean();
-}
 
-/**
- * Request to delline for delivery cost
- */
-function delline_delivery_cost_request()
-{
-    $weight = $_POST['weight'];
-    $volume = $_POST['volume'];
-    $max_weight = $_POST['maxWeight'];
+            const ajaxFormRequest = (weight, volume, maxWeight, cityCode, url) => {
+                jQuery.post({
+                    url: url,
+                    data: {
+                        action: 'delline_delivery_cost_request',
+                        weight,
+                        volume,
+                        maxWeight,
+                        cityCode
+                    }
+                }, res => {
+                    console.log(res)
+                    changeDeliveryCost(url)
+                })
+            }
 
-    $data = array(
-        "appkey" => "022BC94E-12D2-42C6-B6E5-A7A418A760E1",
-        "delivery" => array(
-            "deliveryType" => array(
-                "type" => "auto"
-            ),
-            "arrival" => array(
-                "variant" => "terminal",
-                "city" => "7800000000000000000000000",
-                "time" => array(
-                    "worktimeStart" => "9:30",
-                    "worktimeEnd" => "19:00",
-                    "breakStart" => "12:00",
-                    "breakEnd" => "13:00",
-                    "exactTime" => false
-                ),
-            ),
-            "derival" => array(
-                "produceDate" => "2020-08-11",
-                "variant" => "address",
-                "address" => array(
-                    "street" => "7700000000003690000000000",
-                ),
-                "time" => array(
-                    "worktimeEnd" => "19:30",
-                    "worktimeStart" => "9:00",
-                    "breakStart" => "12:00",
-                    "breakEnd" => "13:00",
-                    "exactTime" => false
-                ),
-            ),
-        ),
-        "members" => array(
-            "requester" => array(
-                "role" => "sender",
-                "uid" => "ae62f076-d602-4341-b691-45bf8dfe4a10"
-            )
-        ),
-        "cargo" => array(
-            "length" => 1,
-            "width" => 1,
-            "weight" => $max_weight,
-            "height" => 1,
-            "totalVolume" => $volume,
-            "totalWeight" => $weight,
-            "oversizedWeight" => 0,
-            "oversizedVolume" => 0,
-            "hazardClass" => 0,
-        ),
-        "payment" => array(
-            "paymentCity" => "7700000000000000000000000",
-            "type" => "cash"
-        ),
-    );
-
-    $json = json_encode($data);
-    $url = ('https://api.dellin.ru/v2/calculator.json');
-    $ch = curl_init($url);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: application/json"));
-    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    $result = curl_exec($ch);
-    $obj = json_decode($result, true);
-    var_dump($obj);
-    $new_rate = 0;
-    setcookie('new_rate', $new_rate, time() + (3600), '/');
-    curl_close($ch);
-
-    wp_die();
-}
-
-function adjust_shipping_rate($rates)
-{
-    foreach ($rates as $rate) {
-        if (($rate->id === 'dellin_shipping_method')) {
-            $rate->cost = $_COOKIE['new_rate'];
-        }
+            const changeDeliveryCost = (url) => {
+                console.log('Смена стоимости')
+                jQuery.post({
+                    url: url,
+                    data: {
+                        action: 'adjust_shipping_rate',
+                    }
+                }, res => {
+                    let input = jQuery('#billing_address_1');
+                    let text = input.val().trim();
+                    input.val(text + 'delline' + Math.random());
+                    jQuery(document.body).trigger('update_checkout');
+                })
+            }
+        </script>
+        <?php
+        return ob_get_clean();
     }
-    return $rates;
+
+    /**
+     * Request to delline for delivery cost
+     */
+    function delline_delivery_cost_request()
+    {
+        $weight = $_POST['weight'];
+        $volume = $_POST['volume'];
+        $max_weight = $_POST['maxWeight'];
+        $city_code = $_POST['cityCode'];
+
+        var_dump("вес", $weight);
+        var_dump("объем", $volume);
+        var_dump("вес самого большого", $max_weight);
+
+        $data = array(
+            "appkey" => "022BC94E-12D2-42C6-B6E5-A7A418A760E1",
+            "delivery" => array(
+                "deliveryType" => array(
+                    "type" => "auto"
+                ),
+                "arrival" => array(
+                    "variant" => "terminal",
+                    "city" => "7800000000000000000000000",
+                ),
+                "derival" => array(
+                    "produceDate" => date("Y-m-d", time() + 86400 * 7),
+                    "variant" => "address",
+                    "address" => array(
+                        "street" => $city_code,
+                    ),
+                    "time" => array(
+                        "worktimeEnd" => "19:30",
+                        "worktimeStart" => "9:00",
+                        "breakStart" => "12:00",
+                        "breakEnd" => "13:00",
+                        "exactTime" => false
+                    ),
+                ),
+            ),
+            "members" => array(
+                "requester" => array(
+                    "role" => "sender",
+                    "uid" => "ae62f076-d602-4341-b691-45bf8dfe4a10"
+                )
+            ),
+            "cargo" => array(
+                "length" => 1,
+                "width" => 1,
+                "weight" => $max_weight,
+                "height" => 1,
+                "totalVolume" => $volume,
+                "totalWeight" => $weight,
+                "oversizedWeight" => 0,
+                "oversizedVolume" => 0,
+                "hazardClass" => 0,
+            ),
+            "payment" => array(
+                "paymentCity" => $city_code,
+                "type" => "cash"
+            ),
+        );
+
+        $json = json_encode($data);
+        $url = ('https://api.dellin.ru/v2/calculator.json');
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: application/json"));
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $result = curl_exec($ch);
+        $obj = json_decode($result, true);
+
+        $price_minimal = $obj["data"]["priceMinimal"];
+        $new_rate = $obj["data"]["availableDeliveryTypes"][$price_minimal];
+        var_dump("Минимальная стоимость доставки", $new_rate);
+        setcookie('new_rate', $new_rate, time() + (300), '/');
+        curl_close($ch);
+        wp_die();
+    }
+
+    /**
+     *  Update shipping rate from request
+     *
+     * @param $rates
+     * @return mixed
+     */
+    function adjust_shipping_rate($rates)
+    {
+        foreach ($rates as $rate) {
+            if ((isset($_COOKIE['new_rate']) && $rate->id === 'delline_shipping_method')) {
+                $rate->cost = $_COOKIE['new_rate'];
+            }
+        }
+        return $rates;
+    }
+
+    add_filter('woocommerce_package_rates', 'adjust_shipping_rate', 50, 1);
+
+    /**
+     *  Request for cities delline
+     *
+     * @return mixed
+     */
+    function get_city_list()
+    {
+        $q = $_POST['q'];
+        $data = array(
+            "appkey" => "022BC94E-12D2-42C6-B6E5-A7A418A760E1",
+            "q" => $q,
+            "limit" => 20,
+        );
+        $json = json_encode($data);
+        $url = ('https://api.dellin.ru/v2/public/kladr.json');
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: application/json"));
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $result = curl_exec($ch);
+        curl_close($ch);
+
+        echo $result;
+
+        wp_die();
+
+    }
 }
