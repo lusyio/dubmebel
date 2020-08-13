@@ -1360,6 +1360,7 @@ footer.site-footer {
 .card-product .card-product__hover {
     margin-bottom: 9px;
     transition: 145ms ease-in-out;
+    overflow: hidden;
 }
 
 .card-product .card-product__hover img {
@@ -1367,7 +1368,11 @@ footer.site-footer {
     object-fit: cover;
 }
 
-.card-product-link:hover .card-product__hover {
+.card-product-link .card-product__hover img {
+    transition: 145ms ease-in-out;
+}
+
+.card-product-link:hover .card-product__hover img {
     transform: scale(1.1);
 }
 
@@ -2063,6 +2068,36 @@ and (max-width: 991px) {
 and (max-width: 768px) {
     footer.site-footer {
         padding-bottom: 75px;
+    }
+
+    .search-div {
+        display: none;
+    }
+
+    header hr, .navbar-phone, .navbar-email {
+        display: none;
+    }
+
+    .categories-grid {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .categories-grid .categories-grid__item {
+        width: 100%;
+    }
+
+    .categories-grid .categories-grid__item--stools {
+        height: 285px;
+    }
+
+    .categories-grid .categories-grid__item--stools > div {
+        background-position-y: 70%;
+    }
+
+    .card-product .card-product__hover img {
+        width: 100%;
+        height: auto;
     }
 }
 

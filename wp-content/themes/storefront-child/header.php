@@ -88,7 +88,7 @@
         <hr>
         <div class="container">
             <div class="row">
-                <div class="col-lg-4 col-6">
+                <div class="col-lg-4 col-md-6 col-8">
                     <div class="dropdown <?= is_front_page() ? 'show' : '' ?>">
                         <button class="btn btn-catalog dropdown-toggle" type="button" id="dropdownMenuButton"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -100,7 +100,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-6 m-auto d-lg-none d-flex">
+                <div class="col-md-6 col-4 m-auto d-lg-none d-flex">
                     <div class="ml-auto d-flex d-lg-none">
                         <?php get_search_form() ?>
                         <?php if (class_exists('WooCommerce')): ?>
