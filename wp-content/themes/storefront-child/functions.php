@@ -1389,14 +1389,19 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
         $volume = 0;
         $max_weight = 0;
         $total_price = 0;
+        $storage_city = [];
         foreach ($cart as $cart_item) {
             $productId = $cart_item['product_id'];
             $quantity = $cart_item['quantity'];
             $price = $cart_item['data']->price;
             $total_price += (float)$quantity * (float)$price;
+            $city = get_field('storage_city', $productId);
             $max_weight = (float)get_field('product_weight_with_package', $productId);
             if ($max_weight < (float)get_field('product_weight_with_package', $productId)) {
                 $max_weight = (float)get_field('product_weight_with_package', $productId);
+            }
+            if ($city && $city !== '' && !in_array($city, $storage_city, true)) {
+                $storage_city[] = $city;
             }
             $weight += ((float)$quantity * (float)get_field('product_weight_with_package', $productId));
             $volume += ((float)$quantity * (float)get_field('package_volume', $productId));
@@ -1404,15 +1409,15 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
         if ($total_price < 20000):
             ob_start();
             ?>
-            <p class="form-row form-row-wide address-field validate-required" id="billing_address_1_field"
+            <p class="form-row form-row-wide address-field validate-required" id="delivery_address"
                data-priority="50">
                 <label for="cityList" class="">
-                    Куда&nbsp;<abbr class="required" title="обязательно">*</abbr></label>
+                    Адрес доставки&nbsp;<abbr class="required" title="обязательно">*</abbr></label>
                 <span class="woocommerce-input-wrapper">
                   <input name="city" type="text" id="cityList" list="datalist"
                          placeholder="Населенный пункт" autocomplete="off"
                          data-weight="<?= $weight ?>" data-volume="<?= $volume ?>"
-                         data-maxweight="<?= $max_weight ?>"
+                         data-maxweight="<?= $max_weight ?>" data-storage='<?= json_encode($storage_city) ?>'
                   />
                     <datalist id="datalist">
                     </datalist>
@@ -1420,6 +1425,8 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
             </p>
             <script type="text/javascript">
                 jQuery($ => {
+                    $('#billing_address_1').val('');
+
                     let cityListEl = $('#cityList');
                     cityListEl.on('keyup', function () {
                         let q = $(this).val()
@@ -1444,9 +1451,10 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
                         const weight = $(this).data('weight')
                         const volume = $(this).data('volume')
                         const maxWeight = $(this).data('maxweight')
+                        const storageCity = $(this).data('storage')
                         const cityCode = $(this).val()
                         if (!isNaN(parseInt(cityCode))) {
-                            ajaxFormRequest(weight, volume, maxWeight, cityCode, my_ajaxurl)
+                            ajaxFormRequest(weight, volume, maxWeight, cityCode, storageCity, my_ajaxurl)
                         } else {
                             /**
                              * @todo Сделать оформления, если населенный пункт не выбран из загруженного списка
@@ -1457,7 +1465,7 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
                 })
 
 
-                const ajaxFormRequest = (weight, volume, maxWeight, cityCode, url) => {
+                const ajaxFormRequest = (weight, volume, maxWeight, cityCode, storageCity, url) => {
                     jQuery.post({
                         url: url,
                         data: {
@@ -1465,10 +1473,14 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
                             weight,
                             volume,
                             maxWeight,
-                            cityCode
+                            cityCode,
+                            storageCity
                         }
                     }, res => {
-                        changeDeliveryCost(url)
+                        console.log(res)
+                        if (res === '200') {
+                            changeDeliveryCost(url)
+                        }
                     })
                 }
 
@@ -1483,6 +1495,7 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
                         /**
                          * Update delivery info
                          */
+
                         let input = jQuery('#billing_address_1');
                         let text = input.val().trim();
                         input.val(text + 'delline' + Math.random());
@@ -1506,72 +1519,107 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
         $volume = $_POST['volume'];
         $max_weight = $_POST['maxWeight'];
         $city_code = $_POST['cityCode'];
-
+        $storage_city = $_POST['storageCity'];
+//        var_dump($storage_city);
 //        var_dump("вес", $weight);
 //        var_dump("объем", $volume);
 //        var_dump("вес самого большого", $max_weight);
 
-        $data = array(
-            "appkey" => "022BC94E-12D2-42C6-B6E5-A7A418A760E1",
-            "delivery" => array(
-                "deliveryType" => array(
-                    "type" => "auto"
-                ),
-                "arrival" => array(
-                    "variant" => "address",
-                    "city" => $city_code,
-                ),
-                "derival" => array(
-                    "produceDate" => date("Y-m-d", time() + 86400 * 7),
-                    "variant" => "terminal",
-                    "city" => $city_code,
-                    "time" => array(
-                        "worktimeEnd" => "19:30",
-                        "worktimeStart" => "9:00",
-                        "breakStart" => "12:00",
-                        "breakEnd" => "13:00",
-                        "exactTime" => false
+        $new_rate = 0;
+
+        $status = 'error';
+
+        foreach ($storage_city as $city) {
+            $storage_city_code = '';
+            switch ($city) {
+                case "Екатеринбург":
+                    $storage_city_code = '6600000100000000000000000';
+                    break;
+                case "Дубна":
+                    $storage_city_code = '5000000300000000000000000';
+                    break;
+                case "Муром":
+                    $storage_city_code = '3300000500000000000000000';
+                    break;
+                case "Иваново":
+                    $storage_city_code = '3700000100000000000000000';
+                    break;
+            }
+
+            $data = array(
+                "appkey" => "022BC94E-12D2-42C6-B6E5-A7A418A760E1",
+                "delivery" => array(
+                    "deliveryType" => array(
+                        "type" => "auto"
+                    ),
+                    "arrival" => array(
+                        "variant" => "address",
+                        "address" => array(
+                            "street" => $city_code,
+                        ),
+                        "time" => array(
+                            "worktimeEnd" => "19:30",
+                            "worktimeStart" => "9:00",
+                        ),
+                    ),
+                    "derival" => array(
+                        "produceDate" => date("Y-m-d", time() + 86400 * 7),
+                        "variant" => "address",
+                        "address" => array(
+                            "street" => $storage_city_code,
+                        ),
+                        "time" => array(
+                            "worktimeEnd" => "19:30",
+                            "worktimeStart" => "9:00",
+                        ),
                     ),
                 ),
-            ),
-            "members" => array(
-                "requester" => array(
-                    "role" => "sender",
-                    "uid" => "ae62f076-d602-4341-b691-45bf8dfe4a10"
-                )
-            ),
-            "cargo" => array(
-                "length" => 1,
-                "width" => 1,
-                "weight" => $max_weight,
-                "height" => 1,
-                "totalVolume" => $volume,
-                "totalWeight" => $weight,
-                "oversizedWeight" => 0,
-                "oversizedVolume" => 0,
-                "hazardClass" => 0,
-            ),
-            "payment" => array(
-                "paymentCity" => $city_code,
-                "type" => "cash"
-            ),
-        );
-
-        $json = json_encode($data);
-        $url = ('https://api.dellin.ru/v2/calculator.json');
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: application/json"));
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $result = curl_exec($ch);
-        $obj = json_decode($result, true);
-
-        $price_minimal = $obj["data"]["priceMinimal"];
-        $new_rate = $obj["data"]["availableDeliveryTypes"][$price_minimal];
-        var_dump("Минимальная стоимость доставки", $new_rate);
-        setcookie('new_rate', $new_rate, time() + (300), '/');
-        curl_close($ch);
+                "members" => array(
+                    "requester" => array(
+                        "role" => "sender",
+                        "uid" => "ae62f076-d602-4341-b691-45bf8dfe4a10"
+                    )
+                ),
+                "cargo" => array(
+                    "length" => 1,
+                    "width" => 1,
+                    "weight" => $max_weight,
+                    "height" => 1,
+                    "totalVolume" => $volume,
+                    "totalWeight" => $weight,
+                    "oversizedWeight" => 0,
+                    "oversizedVolume" => 0,
+                    "hazardClass" => 0,
+                ),
+                "payment" => array(
+                    "paymentCity" => $city_code,
+                    "type" => "cash"
+                ),
+            );
+            $json = json_encode($data);
+            $url = ('https://api.dellin.ru/v2/calculator.json');
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: application/json"));
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $result = curl_exec($ch);
+            $obj = json_decode($result, true);
+            $price_minimal = $obj["data"]["priceMinimal"];
+            $new_rate += (int)$obj["data"]["availableDeliveryTypes"][$price_minimal];
+            curl_close($ch);
+//            var_dump($obj);
+            if ($obj["metadata"]["status"] === 200) {
+                $status = '200';
+            } else {
+                $status = 'error';
+                break;
+            }
+        }
+        if ($status === '200') {
+            setcookie('new_rate', $new_rate, time() + (300), '/');
+        }
+        echo $status;
         wp_die();
     }
 

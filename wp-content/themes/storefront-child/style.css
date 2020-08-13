@@ -1633,6 +1633,10 @@ input[type='submit'].alt,
     border: 0;
 }
 
+#billing_address_1_field {
+    display: none !important;
+}
+
 button,
 input[type='button'],
 input[type='reset'],
