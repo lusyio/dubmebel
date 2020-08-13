@@ -781,7 +781,7 @@ function woocommerce_content()
 
             <?php if (wc_get_loop_prop('total')) : ?>
                 <?php the_post(); ?>
-                <?php wc_get_template_part( 'content', 'product' ); ?>
+                <?php wc_get_template_part('content', 'product'); ?>
 
             <?php endif; ?>
 
