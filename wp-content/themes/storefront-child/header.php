@@ -28,7 +28,7 @@
     <header id="masthead" class="site-header <?= is_front_page() ? 'border-bottom-0' : '' ?>" role="banner"
             style="<?php storefront_header_styles(); ?>">
         <div class="container">
-            <nav class="navbar navbar-dark navbar-expand-xl p-0 justify-content-between">
+            <nav class="navbar p-0 justify-content-between">
                 <div class="navbar-brand">
                     <a class="navbar-brand-logo" href="<?php echo esc_url(home_url('/')); ?>">
                         <img src="/wp-content/themes/storefront-child/svg/logo.svg" alt="">
@@ -101,7 +101,7 @@
                     </div>
                 </div>
                 <div class="col-lg-8 col-12">
-                    <nav class="navbar navbar-dark navbar-expand-xl p-0 justify-content-between">
+                    <nav class="navbar navbar-light navbar-expand-xl p-0 justify-content-between">
                         <?php
                         wp_nav_menu(array(
                             'theme_location' => 'primary',

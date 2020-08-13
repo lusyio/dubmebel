@@ -375,7 +375,7 @@ function get_popular_products()
                 foreach ($products as $product):
                     $image_id = $product->get_image_id();
                     ?>
-                    <div class="col-lg-3 col-12">
+                    <div class="col-lg-3 col-md-6 col-12">
                         <a class="card-product-link" href="<?= get_permalink($product->id) ?>">
                             <div class="card-product">
                                 <div class="card-product__header">
@@ -736,7 +736,7 @@ function get_products_by_category_slug($slug = '')
         foreach ($products as $product):
             $image_id = $product->get_image_id();
             ?>
-            <div class="col-lg-4 col-12">
+            <div class="col-lg-4 col-md-6 col-12">
                 <a class="card-product-link" href="<?= get_permalink($product->id) ?>">
                     <div class="card-product">
                         <div class="card-product__header">
@@ -761,7 +761,7 @@ function get_products_by_category_slug($slug = '')
 /**
  * rewrite default function woocommerce_content
  */
-function ewoocommerce_content()
+function woocommerce_content()
 {
     if (is_singular('product')) {
 
@@ -781,7 +781,8 @@ function ewoocommerce_content()
 
             <?php if (wc_get_loop_prop('total')) : ?>
                 <?php the_post(); ?>
-                <?php wc_get_template_part('content', 'product_cat'); ?>
+                <?php wc_get_template_part( 'content', 'product' ); ?>
+
             <?php endif; ?>
 
             <?php woocommerce_product_loop_end(); ?>
@@ -899,7 +900,7 @@ function get_delivery_block()
     <div class="delivery">
     <div class="container">
         <div class="row">
-            <div class="col-lg-7 col-12">
+            <div class="col-xl-7 col-lg-6 col-12">
                 <div class="delivery-cards">
                     <div class="delivery-cards__item">
                         <img src="/wp-content/themes/storefront-child/svg/main/delivery/factory.svg" alt="">
@@ -933,7 +934,7 @@ function get_delivery_block()
                     </div>
                 </div>
             </div>
-            <div class="col-lg-5 col-12">
+            <div class="col-xl-5 col-lg-6 col-12">
                 <div class="delivery-card">
                     <div class="delivery-card__body">
                         <p class="delivery-card__header">Бесплатная доставка</p>

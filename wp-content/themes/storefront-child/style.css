@@ -88,7 +88,7 @@ h1.entry-title {
     padding-left: 16px;
 }
 
-.woocommerce-form-login .row{
+.woocommerce-form-login .row {
     margin-bottom: 15px;
 }
 
@@ -304,8 +304,13 @@ header#masthead {
     color: #86BC6A;
 }
 
-.navbar-dark .navbar-nav .nav-link:hover {
+.navbar-dark .navbar-nav .nav-link:hover, .navbar-light .navbar-nav .nav-link:hover {
     color: #86BC6A !important;
+}
+
+.navbar-light .navbar-toggler {
+    border: 0;
+    border-radius: 0;
 }
 
 .navbar-phone p:last-of-type, .navbar-email p:last-of-type {
@@ -870,7 +875,7 @@ footer .credits img {
     box-shadow: 2px 4px 10px rgba(0, 0, 0, .2);
 }
 
-.navbar-dark .navbar-nav .nav-link {
+.navbar-dark .navbar-nav .nav-link, .navbar-light .navbar-nav .nav-link {
     position: relative;
     padding: 1rem 0 !important;
     margin: 0 1rem;
@@ -1961,6 +1966,28 @@ and (max-width: 1199px) {
 
     .outer-menu .menu ul {
         text-align: left;
+    }
+
+    .categories-grid .categories-grid__item--tables {
+        width: 100%;
+        margin: 0;
+    }
+
+    .categories-grid .categories-grid__item--tabletops {
+        width: 100%;
+    }
+
+    .categories-grid .categories-grid__item--antique-furniture {
+        width: 100%;
+    }
+
+    .categories-grid .categories-grid__item--rattan-furniture {
+        width: 100%;
+        grid-area: 2 / 3 / 3 / 5;
+    }
+
+    .outer-menu {
+        margin: 0;
     }
 
 }
