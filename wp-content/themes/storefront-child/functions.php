@@ -1380,7 +1380,7 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
     /**
      * Render dellin widget
      * @return false|string
-     * @todo add checkbox for street
+     * @todo Разделить параметры продукта по складам
      */
     function get_dellin_widget()
     {
