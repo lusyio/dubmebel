@@ -124,6 +124,12 @@
                 btn.prop('disabled', true)
             }
         })
+
+        $('.search-form button').on('click', function () {
+            if ($('.search-form input').val() === '') {
+                return false
+            }
+        })
     })
 </script>
 
