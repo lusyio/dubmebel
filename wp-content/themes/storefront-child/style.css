@@ -84,6 +84,14 @@ h1.entry-title {
     display: none;
 }
 
+.woocommerce-form-login label {
+    padding-left: 16px;
+}
+
+.woocommerce-form-login .row{
+    margin-bottom: 15px;
+}
+
 .widget-area .widget a:not(.button) {
     text-decoration: none;
 }
@@ -191,18 +199,18 @@ ul.menu li.current-menu-item > a:before {
     border-radius: 50%;
     width: 16px;
     height: 16px;
-    background-color: #F25E2F;
+    background-color: #86BC6A;
     transform: translate(5px, 5px) scale(0);
     transition: transform 0.2s;
 }
 
 /* Checked */
 .pure-material-radio > input:checked {
-    background-color: #F25E2F;
+    background-color: #86BC6A;
 }
 
 .pure-material-radio > input:checked + span::before {
-    border-color: #F25E2F;
+    border-color: #86BC6A;
 }
 
 .pure-material-radio > input:checked + span::after {
@@ -230,7 +238,7 @@ ul.menu li.current-menu-item > a:before {
 }
 
 .pure-material-radio > input:active + span::before {
-    border-color: #F25E2F;
+    border-color: #86BC6A;
 }
 
 /* Disabled */
@@ -1692,6 +1700,43 @@ table.cart td {
 
 html a:hover {
     color: #86BC6A;
+}
+
+html a {
+    color: #57844A;
+}
+
+html .btn-primary {
+    background: #86BC6A;
+    color: #FFFFFF;
+    border: 0;
+}
+
+.woocommerce-EditAccountForm .row {
+    margin-bottom: 25px;
+}
+
+.woocommerce-EditAccountForm label {
+    padding-left: 16px;
+}
+
+.woocommerce-EditAccountForm em {
+    padding-left: 16px;
+    font-size: 14px;
+    color: #757575;
+}
+
+html .btn-primary:hover {
+    background: #77AB5F;
+}
+
+html .btn-primary:focus {
+    outline: 0;
+    box-shadow: none !important;
+}
+
+html .btn-primary:not(:disabled):not(.disabled).active, html .btn-primary:not(:disabled):not(.disabled):active, html .show > .btn-primary.dropdown-toggle {
+    background: #77AB5F;
 }
 
 .products-props-list__item--label {

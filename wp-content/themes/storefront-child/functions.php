@@ -732,7 +732,7 @@ function get_products_by_category_slug($slug = '')
 /**
  * rewrite default function woocommerce_content
  */
-function woocommerce_content()
+function ewoocommerce_content()
 {
     if (is_singular('product')) {
 
@@ -1592,3 +1592,16 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
 
     }
 }
+
+/**
+ *  Remove addresses from my account
+ *
+ * @param $menu_links
+ * @return mixed
+ */
+function remove_my_account_links( $menu_links ){
+    unset( $menu_links['edit-address'] ); // Addresses
+    return $menu_links;
+}
+
+add_filter ( 'woocommerce_account_menu_items', 'remove_my_account_links' );
