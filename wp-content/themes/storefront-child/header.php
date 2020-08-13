@@ -64,7 +64,7 @@
                     </div>
                 </div>
 
-                <div class="d-flex">
+                <div class="d-lg-flex d-none">
                     <?php get_search_form() ?>
                     <?php if (class_exists('WooCommerce')): ?>
                         <div class="s-header__basket-wr woocommerce z-5 position-relative">
@@ -74,7 +74,7 @@
                                class="basket-btn basket-btn_fixed-xs text-decoration-none position-relative">
                         <span class="basket-btn__label"><img src="/wp-content/themes/storefront-child/svg/cart.svg"
                                                              alt=""></span>
-                                <?php if (sprintf($woocommerce->cart->cart_contents_count) != 0): ?>
+                                <?php if (sprintf($woocommerce->cart->cart_contents_count) !== 0): ?>
                                     <span class="basket-btn__counter"><?php echo sprintf($woocommerce->cart->cart_contents_count); ?></span>
                                 <?php endif; ?>
                             </a>
@@ -88,7 +88,7 @@
         <hr>
         <div class="container">
             <div class="row">
-                <div class="col-lg-4 col-12">
+                <div class="col-lg-4 col-6">
                     <div class="dropdown <?= is_front_page() ? 'show' : '' ?>">
                         <button class="btn btn-catalog dropdown-toggle" type="button" id="dropdownMenuButton"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -98,6 +98,25 @@
                              aria-labelledby="dropdownMenuButton">
                             <?= get_categories_list() ?>
                         </div>
+                    </div>
+                </div>
+                <div class="col-6 m-auto d-lg-none d-flex">
+                    <div class="ml-auto d-flex d-lg-none">
+                        <?php get_search_form() ?>
+                        <?php if (class_exists('WooCommerce')): ?>
+                            <div class="s-header__basket-wr woocommerce z-5 d-flex position-relative">
+                                <?php
+                                global $woocommerce; ?>
+                                <a href="<?php echo $woocommerce->cart->get_cart_url() ?>"
+                                   class="basket-btn basket-btn_fixed-xs text-decoration-none position-relative">
+                        <span class="basket-btn__label"><img src="/wp-content/themes/storefront-child/svg/cart.svg"
+                                                             alt=""></span>
+                                    <?php if (sprintf($woocommerce->cart->cart_contents_count) !== 0): ?>
+                                        <span class="basket-btn__counter"><?php echo sprintf($woocommerce->cart->cart_contents_count); ?></span>
+                                    <?php endif; ?>
+                                </a>
+                            </div>
+                        <?php endif; ?>
                     </div>
                 </div>
                 <div class="col-lg-8 col-12">
@@ -157,6 +176,14 @@
         </div>
 
     </header><!-- #masthead -->
+
+    <script>
+        jQuery($ => {
+            if (document.documentElement.clientWidth < 991) {
+                $('.dropdown .dropdown-menu').removeClass('show')
+            }
+        })
+    </script>
 
     <?php
     /**

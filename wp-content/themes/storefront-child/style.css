@@ -932,6 +932,7 @@ button:hover, input[type='button']:hover, input[type='reset']:hover, input[type=
 }
 
 .search-div {
+    display: table;
     width: 200px;
     z-index: 2;
     margin-right: 16px;
@@ -1061,7 +1062,7 @@ html .cart input[type=number].qty::-webkit-inner-spin-button {
     width: 200vw;
     height: 200vw;
     color: #FEFEFE;
-    background: #1C1C1C;
+    background: #fff;
     border-radius: 50%;
     -webkit-transition: all 0.4s ease;
     -moz-transition: all 0.4s ease;
@@ -1995,7 +1996,67 @@ and (max-width: 1199px) {
 @media screen
 and (max-width: 991px) {
 
+    .card-product-link {
+        display: flex;
+        margin-bottom: 25px
+    }
 
+
+    .card-product .card-product__hover img {
+        height: 300px;
+    }
+
+    .product-container {
+        margin-top: 15px;
+    }
+
+    .navbar-brand-logo {
+        justify-content: center;
+    }
+
+    .row .s-header__basket-wr {
+        flex: 1;
+        padding: 0;
+    }
+
+    .navbar-light .navbar-toggler {
+        padding: 0;
+    }
+
+    .carousel-item-text {
+        left: 30%;
+    }
+
+    .slider-container .carousel-indicators {
+        justify-content: center;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .category-filter-title {
+        margin-top: 25px;
+    }
+
+    .categories-grid .categories-grid__item--stools {
+        width: 200px;
+    }
+
+    .categories-grid .categories-grid__item--chairs > div {
+        background-position: bottom;
+    }
+
+    .categories-grid .categories-grid__item > div {
+        background-position: bottom;
+    }
+
+    .categories-grid .categories-grid__item > p {
+        top: 40px;
+        left: 30px;
+    }
+
+    .storefront-handheld-footer-bar {
+        display: none;
+    }
 }
 
 @media screen
