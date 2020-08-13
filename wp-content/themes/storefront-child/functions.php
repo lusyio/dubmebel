@@ -481,7 +481,7 @@ function get_categories_list($type = '')
                                 </div>
                                 <p>
                                     <span class="categories-grid__name"><?= $category->name ?></span>
-                                    <span class="categories-grid__price">от 4 990 ₽</span>
+                                    <span class="categories-grid__price"><?= get_minimal_price_by_category($category->slug) ?></span>
                                 </p>
                             </a>
                         <?php endif;
@@ -557,6 +557,35 @@ function get_categories_list($type = '')
     <?php
     endif;
     return ob_get_clean();
+}
+
+/**
+ *  Get minimal product price in category by slug
+ *
+ * @param $category_slug
+ * @return string
+ */
+function get_minimal_price_by_category($category_slug)
+{
+    if ($category_slug) {
+        $args = array(
+            'category' => array($category_slug),
+            'limit' => -1,
+            'posts_per_page' => -1,
+        );
+    } else {
+        $args = [];
+    }
+    $products = wc_get_products($args);
+    $minimal_price = 0;
+
+    foreach ($products as $product) {
+        if ($minimal_price < $product->price) {
+            $minimal_price = $product->price;
+        }
+    }
+
+    return $minimal_price . ' ₽';
 }
 
 /**
@@ -1599,9 +1628,10 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
  * @param $menu_links
  * @return mixed
  */
-function remove_my_account_links( $menu_links ){
-    unset( $menu_links['edit-address'] ); // Addresses
+function remove_my_account_links($menu_links)
+{
+    unset($menu_links['edit-address']); // Addresses
     return $menu_links;
 }
 
-add_filter ( 'woocommerce_account_menu_items', 'remove_my_account_links' );
+add_filter('woocommerce_account_menu_items', 'remove_my_account_links');
