@@ -2103,6 +2103,37 @@ and (max-width: 768px) {
 
 @media screen
 and (max-width: 576px) {
+    .carousel-item-text {
+        left: 5%;
+    }
+
+    .delivery-card {
+        background-size: cover;
+    }
+
+    .delivery-cards .delivery-cards__item {
+        max-width: 160px;
+    }
+
+    .content-area .delivery .container {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+
+    .credits-block {
+        max-width: 250px;
+        width: 100%;
+        margin-left: 15px;
+    }
+
+    footer.site-footer {
+        padding-bottom: 30px;
+    }
+
+    .site-footer hr {
+        margin-top: 0;
+    }
 
     .woocommerce-shipping-methods .pure-material-radio > span::after {
         top: 3px;

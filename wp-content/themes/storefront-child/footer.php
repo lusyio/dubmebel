@@ -76,7 +76,7 @@
                 /
                 <a href="">Политика конфиденциальности</a>
             </p>
-            <p class="mb-0">
+            <p class="mb-0 credits-block">
                 <a class="credits" href="https://richbee.ru/" target="_blank"><img
                             src="/wp-content/themes/storefront-child/svg/Richbee-black.svg" alt=""></a>
             </p>
