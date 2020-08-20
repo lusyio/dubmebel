@@ -372,24 +372,25 @@ function get_popular_products()
             <p class="products-list__header">Популярные товары</p>
             <div class="row">
                 <?php
-                foreach ($products as $product):
+                foreach ($products as $key => $product):
                     $image_id = $product->get_image_id();
-                    ?>
-                    <div class="col-lg-3 col-md-6 col-12">
-                        <a class="card-product-link" href="<?= get_permalink($product->id) ?>">
-                            <div class="card-product">
-                                <div class="card-product__header">
-                                    <div class="card-product__hover">
-                                        <img src="<?= wp_get_attachment_image_url($image_id, 'full'); ?>"
-                                             alt="<?= $product->name; ?>">
+                    if ($key <= 7):?>
+                        <div class="col-lg-3 col-md-6 col-12">
+                            <a class="card-product-link" href="<?= get_permalink($product->id) ?>">
+                                <div class="card-product">
+                                    <div class="card-product__header">
+                                        <div class="card-product__hover">
+                                            <img src="<?= wp_get_attachment_image_url($image_id, 'full'); ?>"
+                                                 alt="<?= $product->name; ?>">
+                                        </div>
+                                        <p class="card-product__title"><?= $product->name; ?>
+                                        <p class="card-product__price"><?= $product->get_price_html(); ?></p>
                                     </div>
-                                    <p class="card-product__title"><?= $product->name; ?>
-                                    <p class="card-product__price"><?= $product->get_price_html(); ?></p>
                                 </div>
-                            </div>
-                        </a>
-                    </div>
-                <?php endforeach; ?>
+                            </a>
+                        </div>
+                    <?php endif;
+                endforeach; ?>
             </div>
         </div>
     </div>
@@ -443,21 +444,23 @@ function get_categories_list($type = '')
                 echo '<ul class="menu" id="menu-second">';
                 $menu_number = 0;
                 foreach ($categories as $key => $category) {
-                    $title = $category->name; // заголовок элемента меню (анкор ссылки)
-                    $url = get_term_link($category->term_id, 'product_cat'); // URL ссылки
-                    if ($menu_number < 4) {
-                        echo '<li class="mb-lg-3 mb-3"><a href="' . $url . '">' . $title . '</a></li>';
-                    } else {
-                        $menu_number = 0;
-                        echo '</ul>';
-                        echo '</div>';
-                        echo '</div>';
-                        echo '<div class="col-12 text-center col-md-6 text-lg-left">';
-                        echo '<div class="footer-menu">';
-                        echo '<ul class="menu" id="menu-second_1">';
-                        echo '<li class="mb-lg-3 mb-3"><a href="' . $url . '">' . $title . '</a></li>';
+                    if ($category->parent === 0) {
+                        $title = $category->name; // заголовок элемента меню (анкор ссылки)
+                        $url = get_term_link($category->term_id, 'product_cat'); // URL ссылки
+                        if ($menu_number < 4) {
+                            echo '<li class="mb-lg-3 mb-3"><a href="' . $url . '">' . $title . '</a></li>';
+                        } else {
+                            $menu_number = 0;
+                            echo '</ul>';
+                            echo '</div>';
+                            echo '</div>';
+                            echo '<div class="col-12 text-center col-md-6 text-lg-left">';
+                            echo '<div class="footer-menu">';
+                            echo '<ul class="menu" id="menu-second_1">';
+                            echo '<li class="mb-lg-3 mb-3"><a href="' . $url . '">' . $title . '</a></li>';
+                        }
+                        $menu_number++;
                     }
-                    $menu_number++;
                 }
                 echo '</ul>';
                 echo '</div>';
@@ -1389,19 +1392,19 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
         $volume = 0;
         $max_weight = 0;
         $total_price = 0;
-        $storage_city = [];
+        $storages = [];
         foreach ($cart as $cart_item) {
             $productId = $cart_item['product_id'];
+            $city = get_field('storage_city', $productId);
             $quantity = $cart_item['quantity'];
             $price = $cart_item['data']->price;
             $total_price += (float)$quantity * (float)$price;
-            $city = get_field('storage_city', $productId);
             $max_weight = (float)get_field('product_weight_with_package', $productId);
             if ($max_weight < (float)get_field('product_weight_with_package', $productId)) {
                 $max_weight = (float)get_field('product_weight_with_package', $productId);
             }
-            if ($city && $city !== '' && !in_array($city, $storage_city, true)) {
-                $storage_city[] = $city;
+            if ($city && $city !== '' && !in_array($city, $storages, true)) {
+                $storages[] = $city;
             }
             $weight += ((float)$quantity * (float)get_field('product_weight_with_package', $productId));
             $volume += ((float)$quantity * (float)get_field('package_volume', $productId));
@@ -1417,7 +1420,7 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
                   <input name="city" type="text" id="cityList" list="datalist"
                          placeholder="Населенный пункт" autocomplete="off"
                          data-weight="<?= $weight ?>" data-volume="<?= $volume ?>"
-                         data-maxweight="<?= $max_weight ?>" data-storage='<?= json_encode($storage_city) ?>'
+                         data-maxweight="<?= $max_weight ?>" data-storage='<?= json_encode($storages) ?>'
                   />
                     <datalist id="datalist">
                     </datalist>

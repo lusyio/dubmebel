@@ -1268,6 +1268,7 @@ footer.site-footer {
 
 .delivery-cards .delivery-cards__item img {
     margin-bottom: 10px;
+    width: 64px;
 }
 
 .delivery-cards .delivery-cards__item p:first-of-type {
@@ -1344,8 +1345,17 @@ footer.site-footer {
     margin-bottom: 60px;
 }
 
+table.cart .product-quantity .plus, table.cart .product-quantity .minus {
+    display: inline-block;
+    max-width: 40px;
+    max-height: 40px;
+    min-height: auto;
+    padding: 10px;
+}
+
 .card-product {
     overflow: hidden;
+    margin-bottom: 20px;
 }
 
 .card-product .card-product__title {

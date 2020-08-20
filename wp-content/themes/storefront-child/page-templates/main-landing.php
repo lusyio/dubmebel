@@ -14,8 +14,8 @@ Template Post Type: post, page, product
 
 <?= get_categories_list('grid') ?>
 
-<?= get_popular_products(); ?>
+<?= get_popular_products() ?>
 
-<?= get_delivery_block(); ?>
+<?= get_delivery_block() ?>
 
 <?php get_footer(); ?>

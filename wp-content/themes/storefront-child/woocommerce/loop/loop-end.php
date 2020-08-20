@@ -22,6 +22,7 @@ $activeCat = get_queried_object();
 ?>
 </div>
 <div class="col-12">
+        <?= get_products_by_category_slug($activeCat->slug) ?>
     <div class="row">
         <div class="col-12">
             <?= get_pagination_woo() ?>

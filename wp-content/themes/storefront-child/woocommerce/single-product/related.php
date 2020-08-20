@@ -29,7 +29,7 @@ if ($content):?>
     <div class="col-12">
         <div class="woocommerce-product-details__short-description">
             <p class="woocommerce-product-details__title">Описание:</p>
-            <?= $content; ?>
+            <?php the_content() ?>
         </div>
     </div>
 
