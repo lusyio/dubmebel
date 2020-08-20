@@ -477,17 +477,19 @@ function get_categories_list($type = '')
                     <?php foreach ($categories as $category):
                         if ($category->parent === 0):
                             $thumbnail_id = get_term_meta($category->term_id, 'thumbnail_id', true);
-                            $image = wp_get_attachment_url($thumbnail_id); ?>
-                            <a href="<?= get_term_link($category->term_id, 'product_cat') ?>"
-                               class="categories-grid__item categories-grid__item--<?= $category->slug ?>">
-                                <div style="background-image: url('<?= $image ?>')">
-                                </div>
-                                <p>
-                                    <span class="categories-grid__name"><?= $category->name ?></span>
-                                    <span class="categories-grid__price"><?= get_minimal_price_by_category($category->slug) ?></span>
-                                </p>
-                            </a>
-                        <?php endif;
+                            $image = wp_get_attachment_url($thumbnail_id);
+                            if ($image):?>
+                                <a href="<?= get_term_link($category->term_id, 'product_cat') ?>"
+                                   class="categories-grid__item categories-grid__item--<?= $category->slug ?>">
+                                    <div style="background-image: url('<?= $image ?>')">
+                                    </div>
+                                    <p>
+                                        <span class="categories-grid__name"><?= $category->name ?></span>
+                                        <span class="categories-grid__price"><?= get_minimal_price_by_category($category->slug) ?></span>
+                                    </p>
+                                </a>
+                            <?php endif;
+                        endif;
                     endforeach; ?>
                 </div>
             </div>
