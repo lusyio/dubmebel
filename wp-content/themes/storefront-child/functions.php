@@ -1521,27 +1521,25 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
     function delline_delivery_cost_request()
     {
         $storages = $_POST['storages'];
-        $city_code = $_POST['cityCode'];
+        $delivery_city_code = $_POST['cityCode'];
 
         $new_rate = 0;
 
         $status = 'error';
-
+        $cities_arr = [];
+        $cyties_code = explode(",", get_field('cyties_code', 8));
+        foreach ($cyties_code as $city_code) {
+            $cities_arr[] = explode(':', $city_code);
+        }
+        $derival_city_code = '';
         foreach ($storages as $storage_city_code => $storage) {
-            switch ($storage_city_code) {
-                case "Екатеринбург":
-                    $storage_city_code = '6600000100000000000000000';
-                    break;
-                case "Дубна":
-                    $storage_city_code = '5000000300000000000000000';
-                    break;
-                case "Муром":
-                    $storage_city_code = '3300000500000000000000000';
-                    break;
-                case "Иваново":
-                    $storage_city_code = '3700000100000000000000000';
-                    break;
+
+            foreach ($cities_arr as $cityCode) {
+                if ($storage_city_code === $cityCode[1]) {
+                    $derival_city_code = $cityCode[0];
+                }
             }
+
             $totalVolume = 0;
             $totalWeight = 0;
             $max_weight = 0;
@@ -1561,7 +1559,7 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
                     "arrival" => array(
                         "variant" => "address",
                         "address" => array(
-                            "street" => $city_code,
+                            "street" => $delivery_city_code,
                         ),
                         "time" => array(
                             "worktimeEnd" => "19:30",
@@ -1572,7 +1570,7 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
                         "produceDate" => date("Y-m-d", time() + 86400 * 7),
                         "variant" => "address",
                         "address" => array(
-                            "street" => $storage_city_code,
+                            "street" => $derival_city_code,
                         ),
                         "time" => array(
                             "worktimeEnd" => "19:30",
@@ -1598,7 +1596,7 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
                     "hazardClass" => 0,
                 ),
                 "payment" => array(
-                    "paymentCity" => $city_code,
+                    "paymentCity" => $derival_city_code,
                     "type" => "cash"
                 ),
             );
