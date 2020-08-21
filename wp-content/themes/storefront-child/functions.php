@@ -1405,13 +1405,20 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
             if ($max_weight < (float)get_field('product_weight_with_package', $productId)) {
                 $max_weight = (float)get_field('product_weight_with_package', $productId);
             }
-            if ($city && $city !== '' && !in_array($city, $storages, true)) {
-                $storages[] = $city;
-            }
             $weight += ((float)$quantity * (float)get_field('product_weight_with_package', $productId));
             $volume += ((float)$quantity * (float)get_field('package_volume', $productId));
+            $cityArr[$city][] = [
+                "name" => $cart_item['data']->slug,
+                "max_weight" => $max_weight,
+                "volume" => $volume,
+                "weight" => $weight,
+                "quantity" => $quantity
+            ];
+            if ($city && $city !== '') {
+                $storages = $cityArr;
+            }
         }
-        if ($total_price < 20000):
+        if ($total_price < 200000):
             ob_start();
             ?>
             <p class="form-row form-row-wide address-field validate-required" id="delivery_address"
@@ -1421,8 +1428,7 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
                 <span class="woocommerce-input-wrapper">
                   <input name="city" type="text" id="cityList" list="datalist"
                          placeholder="Населенный пункт" autocomplete="off"
-                         data-weight="<?= $weight ?>" data-volume="<?= $volume ?>"
-                         data-maxweight="<?= $max_weight ?>" data-storage='<?= json_encode($storages) ?>'
+                         data-storages='<?= json_encode($storages) ?>'
                   />
                     <datalist id="datalist">
                     </datalist>
@@ -1453,13 +1459,10 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
                     })
 
                     cityListEl.on('focusout', function () {
-                        const weight = $(this).data('weight')
-                        const volume = $(this).data('volume')
-                        const maxWeight = $(this).data('maxweight')
-                        const storageCity = $(this).data('storage')
+                        const storages = $(this).data('storages')
                         const cityCode = $(this).val()
                         if (!isNaN(parseInt(cityCode))) {
-                            ajaxFormRequest(weight, volume, maxWeight, cityCode, storageCity, my_ajaxurl)
+                            ajaxFormRequest(storages, cityCode, my_ajaxurl)
                         } else {
                             /**
                              * @todo Сделать оформления, если населенный пункт не выбран из загруженного списка
@@ -1470,16 +1473,13 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
                 })
 
 
-                const ajaxFormRequest = (weight, volume, maxWeight, cityCode, storageCity, url) => {
+                const ajaxFormRequest = (storages, cityCode, url) => {
                     jQuery.post({
                         url: url,
                         data: {
                             action: 'delline_delivery_cost_request',
-                            weight,
-                            volume,
-                            maxWeight,
+                            storages,
                             cityCode,
-                            storageCity
                         }
                     }, res => {
                         console.log(res)
@@ -1520,23 +1520,15 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
      */
     function delline_delivery_cost_request()
     {
-        $weight = $_POST['weight'];
-        $volume = $_POST['volume'];
-        $max_weight = $_POST['maxWeight'];
+        $storages = $_POST['storages'];
         $city_code = $_POST['cityCode'];
-        $storage_city = $_POST['storageCity'];
-//        var_dump($storage_city);
-//        var_dump("вес", $weight);
-//        var_dump("объем", $volume);
-//        var_dump("вес самого большого", $max_weight);
 
         $new_rate = 0;
 
         $status = 'error';
 
-        foreach ($storage_city as $city) {
-            $storage_city_code = '';
-            switch ($city) {
+        foreach ($storages as $storage_city_code => $storage) {
+            switch ($storage_city_code) {
                 case "Екатеринбург":
                     $storage_city_code = '6600000100000000000000000';
                     break;
@@ -1550,7 +1542,16 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
                     $storage_city_code = '3700000100000000000000000';
                     break;
             }
-
+            $totalVolume = 0;
+            $totalWeight = 0;
+            $max_weight = 0;
+            foreach ($storage as $items) {
+                $totalVolume += $items['volume'];
+                $totalWeight += $items['weight'];
+                if ($max_weight < $items['max_weight']) {
+                    $max_weight = $items['max_weight'];
+                }
+            }
             $data = array(
                 "appkey" => "022BC94E-12D2-42C6-B6E5-A7A418A760E1",
                 "delivery" => array(
@@ -1588,10 +1589,10 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
                 "cargo" => array(
                     "length" => 1,
                     "width" => 1,
-                    "weight" => $max_weight,
+                    "weight" => (float)$max_weight,
                     "height" => 1,
-                    "totalVolume" => $volume,
-                    "totalWeight" => $weight,
+                    "totalVolume" => (float)$totalVolume,
+                    "totalWeight" => (float)$totalWeight,
                     "oversizedWeight" => 0,
                     "oversizedVolume" => 0,
                     "hazardClass" => 0,
@@ -1601,6 +1602,7 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
                     "type" => "cash"
                 ),
             );
+//            var_dump($data);
             $json = json_encode($data);
             $url = ('https://api.dellin.ru/v2/calculator.json');
             $ch = curl_init($url);
