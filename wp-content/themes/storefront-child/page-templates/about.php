@@ -117,7 +117,7 @@ Template Post Type: post, page, product
             </div>
         <?php endif; ?>
         <div class="map">
-            <iframe src="https://yandex.ru/map-widget/v1/?um=constructor%3Aa528835077df2cb1b85605ac12a336bd62c4e9e7e1661654c3c44826c349c393&amp;source=constructor"
+            <iframe src="https://yandex.com/map-widget/v1/?um=constructor%3A22dfad516a125381ce1fb29e71e87bc3da8e55ed861d0b9a554aac037446b613&amp;source=constructor"
                     width="100%" height="400" frameborder="0"></iframe>
         </div>
     </div>
