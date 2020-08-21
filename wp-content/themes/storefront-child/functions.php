@@ -1418,7 +1418,7 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
                 $storages = $cityArr;
             }
         }
-        if ($total_price < 200000):
+        if ($total_price < 20000):
             ob_start();
             ?>
             <p class="form-row form-row-wide address-field validate-required" id="delivery_address"
@@ -1440,6 +1440,7 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
 
                     let cityListEl = $('#cityList');
                     cityListEl.on('keyup', function () {
+                        $('#billing_address_1').val('');
                         let q = $(this).val()
                         if (q.length > 2) {
                             jQuery.post({
@@ -1474,6 +1475,7 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
 
 
                 const ajaxFormRequest = (storages, cityCode, url) => {
+                    jQuery('#place_order').prop('disabled', true)
                     jQuery.post({
                         url: url,
                         data: {
@@ -1481,10 +1483,12 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
                             storages,
                             cityCode,
                         }
+
                     }, res => {
                         console.log(res)
                         if (res === '200') {
                             changeDeliveryCost(url)
+                            jQuery('#place_order').prop('disabled', false)
                         }
                     })
                 }
