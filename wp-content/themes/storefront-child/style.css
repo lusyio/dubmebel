@@ -3,7 +3,7 @@ Theme Name:   	Richbee
 Author:       	Richbee
 Template:     	storefront
 Description:  	Дочерняя тема для storefront
-Version:      	1.0.6
+Version:      	1.0.7
 Theme URI:    https://richbee.ru/
 Author URI:   https://richbee.ru/
 
@@ -2266,6 +2266,26 @@ and (max-width: 576px) {
 
     .outer-menu .menu li {
         margin-left: 0;
+    }
+
+}
+
+@media screen
+and (max-width: 320px) {
+    .delivery-cards .delivery-cards__item {
+        max-width: 100%;
+        text-align: center;
+    }
+
+    .delivery-card .delivery-card__body {
+        padding: 40px 30px;
+    }
+
+    .delivery-card {
+        width: 100%;
+        background: url(/wp-content/themes/storefront-child/images/delivery/gazel.jpg) no-repeat bottom right;
+        background-size: 125%;
+        height: 325px;
     }
 
 }
