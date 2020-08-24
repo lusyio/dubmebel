@@ -1865,6 +1865,10 @@ form.cart .quantity {
     margin-bottom: 16px;
 }
 
+.storefront-sticky-add-to-cart {
+    display: none !important;
+}
+
 .form-row.woocommerce-validated input.input-text {
     -webkit-box-shadow: none;
     -moz-box-shadow: none;
@@ -2133,7 +2137,7 @@ and (max-width: 768px) {
         padding-bottom: 75px;
     }
 
-    .carousel-item-text .carousel-item-text__caption{
+    .carousel-item-text .carousel-item-text__caption {
         line-height: 36px;
     }
 
@@ -2194,6 +2198,22 @@ and (max-width: 768px) {
 and (max-width: 576px) {
     .carousel-item-text {
         left: 5%;
+    }
+
+    .table.cart td.product-remove {
+        border: 0;
+    }
+
+    .products-props-list__item--value {
+        flex: 0 0 100%;
+        max-width: 100%;
+        padding-left: 0;
+        text-align: left;
+    }
+
+    .products-props-list__item--label {
+        flex: 0 0 1000%;
+        max-width: 100%;
     }
 
     table.woocommerce-checkout-review-order-table .product-name {
