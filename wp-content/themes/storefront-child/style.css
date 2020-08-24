@@ -2133,6 +2133,10 @@ and (max-width: 768px) {
         padding-bottom: 75px;
     }
 
+    .carousel-item-text .carousel-item-text__caption{
+        line-height: 36px;
+    }
+
     .products-props-list__item {
         font-size: 14px;
     }
