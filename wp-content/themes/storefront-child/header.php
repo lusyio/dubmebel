@@ -124,7 +124,7 @@
                     </div>
                 </div>
                 <div class="col-lg-8 col-12">
-                    <nav class="navbar navbar-light navbar-expand-xl p-0 justify-content-between">
+                    <nav class="navbar navbar-light navbar-expand-xl h-100 p-0 justify-content-between">
                         <?php
                         wp_nav_menu(array(
                             'theme_location' => 'primary',
@@ -132,7 +132,7 @@
                             'container_id' => '',
                             'container_class' => 'collapse navbar-collapse justify-content-start mr-5',
                             'menu_id' => false,
-                            'menu_class' => 'navbar-nav m-0',
+                            'menu_class' => 'navbar-nav m-0 h-100 align-items-center',
                             'depth' => 3,
                             'fallback_cb' => 'wp_bootstrap_navwalker::fallback',
                             'walker' => new wp_bootstrap_navwalker()

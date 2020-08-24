@@ -1566,6 +1566,8 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
             }
 
             $totalVolume = 0;
+            $overTotalVolume = 0;
+            $overTotalWeight = 0;
             $totalWeight = 0;
             $max_weight = 0;
             foreach ($storage as $items) {
@@ -1574,6 +1576,10 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
                 if ($max_weight < $items['max_weight']) {
                     $max_weight = $items['max_weight'];
                 }
+            }
+            if ($totalWeight >= (float)100 || $totalVolume >= (float)3) {
+                $overTotalWeight = $totalWeight;
+                $overTotalVolume = $totalVolume;
             }
             $data = array(
                 "appkey" => "022BC94E-12D2-42C6-B6E5-A7A418A760E1",
@@ -1616,8 +1622,8 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
                     "height" => 1,
                     "totalVolume" => (float)$totalVolume,
                     "totalWeight" => (float)$totalWeight,
-                    "oversizedWeight" => 0,
-                    "oversizedVolume" => 0,
+                    "oversizedWeight" => (float)$overTotalWeight,
+                    "oversizedVolume" => (float)$overTotalVolume,
                     "hazardClass" => 0,
                 ),
                 "payment" => array(
