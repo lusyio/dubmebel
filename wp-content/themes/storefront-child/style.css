@@ -2141,7 +2141,7 @@ and (max-width: 768px) {
         padding-bottom: 75px;
     }
 
-    .carousel-item-text .carousel-item-text__caption {
+    .carousel-item-text .carousel-item-text__caption, .carousel-item-text .carousel-item-text__title {
         line-height: 36px;
     }
 
