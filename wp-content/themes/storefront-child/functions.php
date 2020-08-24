@@ -583,7 +583,7 @@ function get_minimal_price_by_category($category_slug)
     $minimal_price = 0;
 
     foreach ($products as $product) {
-        if ($minimal_price === 0 || ($minimal_price > $product->price && $product->price !== '0' && $product->price)) {
+        if (($minimal_price === 0 && $product->price) || ($minimal_price > $product->price && $product->price && $product->price !== '0')) {
             $minimal_price = $product->price;
         }
     }
