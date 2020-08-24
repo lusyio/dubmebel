@@ -44,7 +44,7 @@ $wrapper_classes = apply_filters(
     <figure class="woocommerce-product-gallery__wrapper">
         <?php
         if ($product->get_image_id()) {
-            $html = '<a data-lightbox="example-set" class="example-image-link" href="' . wp_get_attachment_url($post_thumbnail_id) . '"><img alt="' . $product->name . '" src="' . wp_get_attachment_url($post_thumbnail_id) . '"/></a>';
+            $html = '<a data-lightbox="example-set" class="example-image-link d-block mb-4" href="' . wp_get_attachment_url($post_thumbnail_id) . '"><img alt="' . $product->name . '" src="' . wp_get_attachment_url($post_thumbnail_id) . '"/></a>';
         } else {
             $html = '<div class="woocommerce-product-gallery__image--placeholder">';
             $html .= sprintf('<img src="%s" alt="%s" class="wp-post-image" />', esc_url(wc_placeholder_img_src('woocommerce_single')), esc_html__('Awaiting product image', 'woocommerce'));
