@@ -3,7 +3,7 @@ Theme Name:   	Richbee
 Author:       	Richbee
 Template:     	storefront
 Description:  	Дочерняя тема для storefront
-Version:      	1.0.2
+Version:      	1.0.3
 Theme URI:    https://richbee.ru/
 Author URI:   https://richbee.ru/
 
@@ -363,6 +363,26 @@ footer .navbar-brand-logo {
     min-height: 56px;
     border: 0;
     max-width: 100%;
+}
+
+.swiper-button-next:after, .swiper-container-rtl .swiper-button-prev:after, .swiper-button-next.swiper-button-disabled, .swiper-button-prev.swiper-button-disabled {
+    color: #dcdcdc;
+}
+
+.swiper-button-next:after, .swiper-button-prev:after {
+    color: #dcdcdc;
+}
+
+.swiper-slide > a img {
+    width: 96px;
+    height: 96px;
+    object-fit: cover;
+}
+
+.swiper-slide > div img {
+    width: 96px;
+    height: 96px;
+    object-fit: cover;
 }
 
 .woocommerce-pagination {

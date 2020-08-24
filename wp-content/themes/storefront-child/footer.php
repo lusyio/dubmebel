@@ -110,6 +110,29 @@
     }
 
     jQuery(function ($) {
+        const swiper = new Swiper('.swiper-container', {
+            spaceBetween: 15,
+            slidesPerView: 3,
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+
+            breakpoints: {
+                640: {
+                    slidesPerView: 3,
+                    spaceBetween: 15,
+                },
+                768: {
+                    slidesPerView: 4,
+                    spaceBetween: 15,
+                },
+                1024: {
+                    slidesPerView: 5,
+                    spaceBetween: 15,
+                },
+            }
+        });
 
         $('.single input[type=phone]').on('keyup', function () {
             let newString = $(this).val().replace(/\D/g, '')

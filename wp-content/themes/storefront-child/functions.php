@@ -44,11 +44,13 @@ function enqueue_child_theme_styles()
     wp_enqueue_script('html5hiv', get_template_directory_uri() . '/inc/assets/js/html5.js', array(), '3.7.0', false);
     wp_script_add_data('html5hiv', 'conditional', 'lt IE 9');
 
-// load swiper js and css
-//    wp_enqueue_script('wp-swiper-js', get_stylesheet_directory_uri() . '/inc/assets/js/swiper.min.js', array(), '', true);
-//    wp_enqueue_style('wp-swiper-js', get_stylesheet_directory_uri() . '/inc/assets/css/swiper.min.css', array(), '', true);
+    // load swiper js
+    wp_enqueue_script('wp-swiper-js', 'https://unpkg.com/swiper/swiper-bundle.min.js', array(), '', true);
 
-// load bootstrap js
+    // load lightbox js
+    wp_enqueue_script('wp-lightbox-js', 'https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js', array(), '', true);
+
+    // load bootstrap js
     wp_enqueue_script('wp-bootstrap-starter-popper', get_stylesheet_directory_uri() . '/inc/assets/js/popper.min.js', array(), '', true);
     wp_enqueue_script('wp-bootstrap-starter-bootstrapjs', get_stylesheet_directory_uri() . '/inc/assets/js/bootstrap.min.js', array(), '', true);
     wp_enqueue_script('wp-bootstrap-starter-themejs', get_stylesheet_directory_uri() . '/inc/assets/js/theme-script.min.js', array(), '', true);
@@ -57,7 +59,7 @@ function enqueue_child_theme_styles()
     if (is_singular() && comments_open() && get_option('thread_comments')) {
         wp_enqueue_script('comment-reply');
     }
-//enqueue my child theme stylesheet
+    //enqueue my child theme stylesheet
     wp_enqueue_style('child-style', get_stylesheet_uri(), array('theme'));
 }
 

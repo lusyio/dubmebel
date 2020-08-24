@@ -28,8 +28,6 @@ $attachment_ids = $product->get_gallery_image_ids();
 
 if ($attachment_ids && $product->get_image_id()) {
     foreach ($attachment_ids as $key => $attachment_id) {
-        if ($key <= 3) {
-            echo apply_filters('woocommerce_single_product_image_thumbnail_html', wc_get_gallery_image_html($attachment_id), $attachment_id); // phpcs:disable WordPress.XSS.EscapeOutput.OutputNotEscaped
-        }
+        echo '<div class="swiper-slide">' . '<a data-lightbox="example-set" class="example-image-link" href="' . wp_get_attachment_url($attachment_id) . '">' . '<img alt="' . $product->name . '" src="' . wp_get_attachment_url($attachment_id) . '"/>' . '</a>' . '</div>'; // phpcs:disable WordPress.XSS.EscapeOutput.OutputNotEscaped
     }
 }
