@@ -1439,9 +1439,9 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
                     $('#billing_address_1').val('');
 
                     let cityListEl = $('#cityList');
-                    cityListEl.on('keyup', function () {
+                    cityListEl.on('keyup', debounce(function () {
                         $('#billing_address_1').val('');
-                        let q = $(this).val()
+                        let q = cityListEl.val()
                         if (q.length > 2) {
                             jQuery.post({
                                 url: my_ajaxurl,
@@ -1451,13 +1451,13 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
                                 }
                             }, res => {
                                 const obj = $.parseJSON(res)
-                                $(this).next('datalist').html('')
+                                cityListEl.next('datalist').html('')
                                 obj.cities.map(item => {
-                                    $(this).next('datalist').append('<option value="' + item.code + '">' + item.aString + '</option>')
+                                    cityListEl.next('datalist').append('<option value="' + item.code + '">' + item.aString + '</option>')
                                 })
                             })
                         }
-                    })
+                    }, 150))
 
                     cityListEl.on('focusout', function () {
                         const storages = $(this).data('storages')
@@ -1473,6 +1473,19 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
                     })
                 })
 
+                const debounce = (func, wait) => {
+                    let timeout;
+
+                    return function executedFunction(...args) {
+                        const later = () => {
+                            clearTimeout(timeout);
+                            func(...args);
+                        };
+
+                        clearTimeout(timeout);
+                        timeout = setTimeout(later, wait);
+                    };
+                };
 
                 const ajaxFormRequest = (storages, cityCode, url) => {
                     jQuery('#place_order').prop('disabled', true)
