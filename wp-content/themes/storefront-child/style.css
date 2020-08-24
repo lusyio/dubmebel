@@ -3,7 +3,7 @@ Theme Name:   	Richbee
 Author:       	Richbee
 Template:     	storefront
 Description:  	Дочерняя тема для storefront
-Version:      	1.0.5
+Version:      	1.0.6
 Theme URI:    https://richbee.ru/
 Author URI:   https://richbee.ru/
 
@@ -2214,6 +2214,10 @@ and (max-width: 576px) {
     .products-props-list__item--label {
         flex: 0 0 1000%;
         max-width: 100%;
+    }
+
+    .products-props-list__item {
+        flex-wrap: wrap;
     }
 
     table.woocommerce-checkout-review-order-table .product-name {
