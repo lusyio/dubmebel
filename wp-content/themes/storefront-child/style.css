@@ -2125,6 +2125,10 @@ and (max-width: 576px) {
         left: 5%;
     }
 
+    .dropdown .dropdown-menu {
+        min-width: 305px;
+    }
+
     .delivery-card {
         background-size: cover;
     }

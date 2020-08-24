@@ -410,16 +410,22 @@ add_filter('woocommerce_get_price_html', 'new_price_html', 100, 2);
  */
 function new_price_html($price, $product)
 {
-    if ($product->regular_price !== $product->price) {
-        $sale = round(100 - $product->price / $product->regular_price * 100);
-        return '<span class="now-price-sale">' . $product->price . '<span class="woocommerce-Price-currencySymbol"> ' . get_woocommerce_currency_symbol() . '</span>' . '</span>' .
-            ' <del> <span class="woocommerce-Price-amount amount">' . $product->regular_price .
-            '<span class="woocommerce-Price-currencySymbol"> ' . get_woocommerce_currency_symbol() . '</span>' . '</span></del>' .
-            ' <span class="sale-badge">' . $sale . '%</span>';
+    if ($product->price && $product->price !== '0') {
+
+        if ($product->regular_price !== $product->price) {
+            $sale = round(100 - $product->price / $product->regular_price * 100);
+            return '<span class="now-price-sale">' . $product->price . '<span class="woocommerce-Price-currencySymbol"> ' . get_woocommerce_currency_symbol() . '</span>' . '</span>' .
+                ' <del> <span class="woocommerce-Price-amount amount">' . $product->regular_price .
+                '<span class="woocommerce-Price-currencySymbol"> ' . get_woocommerce_currency_symbol() . '</span>' . '</span></del>' .
+                ' <span class="sale-badge">' . $sale . '%</span>';
+        }
+
+        return '<span class="now-price">' . $product->price . '<span class="woocommerce-Price-currencySymbol">'
+            . get_woocommerce_currency_symbol() . '</span></span>';
     }
 
-    return '<span class="now-price">' . $product->price . '<span class="woocommerce-Price-currencySymbol">'
-        . get_woocommerce_currency_symbol() . '</span></span>';
+    return 'Цена не указана';
+
 }
 
 /**
@@ -585,7 +591,7 @@ function get_minimal_price_by_category($category_slug)
     $minimal_price = 0;
 
     foreach ($products as $product) {
-        if ($minimal_price === 0 || $minimal_price > $product->price) {
+        if ($minimal_price === 0 || ($minimal_price > $product->price && $product->price !== '0' && $product->price)) {
             $minimal_price = $product->price;
         }
     }
