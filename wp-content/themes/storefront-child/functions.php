@@ -1537,6 +1537,7 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
         <?php else: ?>
             <script>
                 jQuery($ => {
+                    $('#billing_address_1').val('');
                     $('#billing_address_1_field').show()
                 })
             </script>
