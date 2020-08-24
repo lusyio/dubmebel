@@ -1835,7 +1835,7 @@ html .btn-primary:not(:disabled):not(.disabled).active, html .btn-primary:not(:d
     margin-bottom: 16px;
 }
 
-.table.cart td.product-remove {
+table.cart td.product-remove {
     border: 0 !important;
 }
 
