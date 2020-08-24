@@ -3,7 +3,7 @@ Theme Name:   	Richbee
 Author:       	Richbee
 Template:     	storefront
 Description:  	Дочерняя тема для storefront
-Version:      	1.0.4
+Version:      	1.0.5
 Theme URI:    https://richbee.ru/
 Author URI:   https://richbee.ru/
 
@@ -1835,6 +1835,10 @@ html .btn-primary:not(:disabled):not(.disabled).active, html .btn-primary:not(:d
     margin-bottom: 16px;
 }
 
+.table.cart td.product-remove {
+    border: 0 !important;
+}
+
 .product-container .price {
     font-weight: normal;
     font-size: 30px;
@@ -2198,10 +2202,6 @@ and (max-width: 768px) {
 and (max-width: 576px) {
     .carousel-item-text {
         left: 5%;
-    }
-
-    .table.cart td.product-remove {
-        border: 0;
     }
 
     .products-props-list__item--value {
