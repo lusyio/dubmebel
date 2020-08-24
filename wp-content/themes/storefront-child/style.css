@@ -1679,8 +1679,19 @@ input[type='submit'].alt,
     border: 0;
 }
 
-#billing_address_1_field {
-    display: none !important;
+.woocommerce-billing-fields__field-wrapper #billing_address_1_field {
+    display: none;
+}
+
+ul.woocommerce-thankyou-order-details {
+    height: 100%;
+    margin: 0;
+    padding: 20px;
+    background: #f7f7f7;
+}
+
+table.woocommerce-table--order-details {
+    margin-bottom: 0;
 }
 
 button,

@@ -1426,13 +1426,13 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
                 $storages = $cityArr;
             }
         }
+        ob_start();
         if ($total_price < 20000):
-            ob_start();
             ?>
             <p class="form-row form-row-wide address-field validate-required" id="delivery_address"
                data-priority="50">
                 <label for="cityList" class="">
-                    Адрес доставки&nbsp;<abbr class="required" title="обязательно">*</abbr></label>
+                    Адрес доставки для деловых линий&nbsp;<abbr class="required" title="обязательно">*</abbr></label>
                 <span class="woocommerce-input-wrapper">
                   <input name="city" type="text" id="cityList" list="datalist"
                          placeholder="Населенный пункт" autocomplete="off"
@@ -1445,6 +1445,7 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
             <script type="text/javascript">
                 jQuery($ => {
                     $('#billing_address_1').val('');
+                    $('#billing_address_1_field').addClass('d-none')
 
                     let cityListEl = $('#cityList');
                     cityListEl.on('keyup', debounce(function () {
@@ -1533,11 +1534,15 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
                     })
                 }
             </script>
-            <?php
-            return ob_get_clean();
-        else:
-            return false;
+        <?php else: ?>
+            <script>
+                jQuery($ => {
+                    $('#billing_address_1_field').show()
+                })
+            </script>
+        <?php
         endif;
+        return ob_get_clean();
     }
 
     /**
