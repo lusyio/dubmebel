@@ -268,14 +268,6 @@ function woo_remove_product_tabs($tabs)
     return $tabs;
 }
 
-//Количество товаров для вывода на странице магазина
-add_filter('loop_shop_per_page', 'wg_view_all_products');
-
-function wg_view_all_products()
-{
-    return '9999';
-}
-
 //Удаление сортировки
 add_action('init', 'bbloomer_delay_remove');
 
@@ -677,6 +669,14 @@ function get_slider_from_library_page()
     </div>
     <?php
     return ob_get_clean();
+}
+
+//Количество товаров для вывода на странице магазина
+add_filter('loop_shop_per_page', 'wg_view_all_products');
+
+function wg_view_all_products()
+{
+    return '9';
 }
 
 /**

@@ -365,6 +365,10 @@ footer .navbar-brand-logo {
     max-width: 100%;
 }
 
+.woocommerce-pagination {
+    float: left !important;
+}
+
 .carousel-item-text {
     position: absolute;
     bottom: 25%;
