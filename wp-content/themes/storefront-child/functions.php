@@ -848,6 +848,11 @@ function get_categories_with_subcategories($active_cat_ID)
         if ((count($child_product_cats) !== 0 && $active_cat_ID === $product_cat->term_id) || (count($child_product_cats) !== 0 && $isChildActive)) {
             echo '<ul class="subcategory-list">';
             foreach ($child_product_cats as $child_product_cat) {
+                if ($active_cat_ID === $child_product_cat->term_id && $product_cat->term_id === $child_product_cat->parent) {
+                    $activeSub = 'active';
+                } else {
+                    $activeSub = '';
+                }
                 $linkSub = get_term_link($child_product_cat->slug, $child_product_cat->taxonomy);
                 echo '<li class="' . $activeSub . '"><a href="' . $linkSub . '">' . $child_product_cat->name . '</a></li>';
             }
