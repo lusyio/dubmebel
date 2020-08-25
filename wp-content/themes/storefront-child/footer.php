@@ -74,7 +74,7 @@
                 Все
                 права защищены
                 /
-                <a href="">Политика конфиденциальности</a>
+                <a href="<?= get_page_link('2439') ?>">Политика конфиденциальности</a>
             </p>
             <p class="mb-0 credits-block">
                 <a class="credits" href="https://richbee.ru/" target="_blank"><img
