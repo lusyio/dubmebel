@@ -423,7 +423,7 @@ function new_price_html($price, $product)
 }
 
 /**
- * Render category list for dropdown
+ * Render category list
  *
  * @param string $type
  * @return false|string
@@ -444,7 +444,7 @@ function get_categories_list($type = '')
                 echo '<ul class="menu" id="menu-second">';
                 $menu_number = 0;
                 foreach ($categories as $key => $category) {
-                    if ($category->parent === 0) {
+                    if ($category->parent === 0 && $category->slug !== 'sale-category') {
                         $title = $category->name; // заголовок элемента меню (анкор ссылки)
                         $url = get_term_link($category->term_id, 'product_cat'); // URL ссылки
                         if ($menu_number < 4) {
@@ -478,17 +478,29 @@ function get_categories_list($type = '')
                         if ($category->parent === 0):
                             $thumbnail_id = get_term_meta($category->term_id, 'thumbnail_id', true);
                             $image = wp_get_attachment_url($thumbnail_id);
-                            if ($image):?>
-                                <a href="<?= get_term_link($category->term_id, 'product_cat') ?>"
-                                   class="categories-grid__item categories-grid__item--<?= $category->slug ?>">
-                                    <div style="background-image: url('<?= $image ?>')">
-                                    </div>
-                                    <p>
-                                        <span class="categories-grid__name"><?= $category->name ?></span>
-                                        <span class="categories-grid__price"><?= get_minimal_price_by_category($category->slug) ?></span>
-                                    </p>
-                                </a>
-                            <?php endif;
+                            if ($image):
+                                if ($category->slug === 'sale-category'):?>
+                                    <a href="<?= get_permalink(4285) ?>"
+                                       class="categories-grid__item categories-grid__item--<?= $category->slug ?>">
+                                        <div style="background-image: url('<?= $image ?>')">
+                                        </div>
+                                        <p>
+                                            <span class="categories-grid__name"><?= $category->name ?></span>
+                                            <span class="categories-grid__price"><?= $category->description ?></span>
+                                        </p>
+                                    </a>
+                                <?php else: ?>
+                                    <a href="<?= get_term_link($category->term_id, 'product_cat') ?>"
+                                       class="categories-grid__item categories-grid__item--<?= $category->slug ?>">
+                                        <div style="background-image: url('<?= $image ?>')">
+                                        </div>
+                                        <p>
+                                            <span class="categories-grid__name"><?= $category->name ?></span>
+                                            <span class="categories-grid__price"><?= get_minimal_price_by_category($category->slug) ?></span>
+                                        </p>
+                                    </a>
+                                <?php endif;
+                            endif;
                         endif;
                     endforeach; ?>
                 </div>
@@ -510,9 +522,6 @@ function get_categories_list($type = '')
                     case 'lunch-groups':
                         $icon = '/wp-content/themes/storefront-child/svg/category-icons/lunch-groups.svg';
                         break;
-                    case 'rattan-furniture':
-                        $icon = '/wp-content/themes/storefront-child/svg/category-icons/rattan-furniture.svg';
-                        break;
                     case 'stools':
                         $icon = '/wp-content/themes/storefront-child/svg/category-icons/stools.svg';
                         break;
@@ -529,7 +538,7 @@ function get_categories_list($type = '')
                     'parent' => $category->term_id
                 );
                 $child_product_cats = get_terms($child_args);
-                if ($category->parent === 0):
+                if ($category->parent === 0 && $category->slug !== 'sale-category'):
                     ?>
                     <li>
                         <a href="<?= get_term_link($category->term_id, 'product_cat') ?>">

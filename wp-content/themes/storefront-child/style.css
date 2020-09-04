@@ -3,7 +3,7 @@ Theme Name:   	Richbee
 Author:       	Richbee
 Template:     	storefront
 Description:  	Дочерняя тема для storefront
-Version:      	1.0.7
+Version:      	1.0.8
 Theme URI:    https://richbee.ru/
 Author URI:   https://richbee.ru/
 
@@ -522,12 +522,12 @@ footer .navbar-brand-logo {
     background-position: bottom;
 }
 
-.categories-grid .categories-grid__item--rattan-furniture {
+.categories-grid .categories-grid__item--rattan-furniture, .categories-grid .categories-grid__item--sale-category {
     width: 380px;
     grid-area: 2 / 4 / 3 / 5;
 }
 
-.categories-grid .categories-grid__item--rattan-furniture > p span {
+.categories-grid .categories-grid__item--rattan-furniture > p span, .categories-grid .categories-grid__item--sale-category > p span {
     max-width: 80%;
 }
 
@@ -2069,7 +2069,7 @@ and (max-width: 1199px) {
         width: 100%;
     }
 
-    .categories-grid .categories-grid__item--rattan-furniture {
+    .categories-grid .categories-grid__item--rattan-furniture, .categories-grid .categories-grid__item--sale-category {
         width: 100%;
         grid-area: 2 / 3 / 3 / 5;
     }
