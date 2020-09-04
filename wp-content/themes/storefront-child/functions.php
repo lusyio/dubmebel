@@ -943,7 +943,7 @@ function get_delivery_block()
                     <div class="delivery-cards__item">
                         <img src="/wp-content/themes/storefront-child/svg/main/delivery/percentage.svg" alt="">
                         <p>Скидки уже со второго заказа</p>
-                        <p>Нашим клиентам ма дарим скидку на каждую следующую покупку</p>
+                        <p>Нашим клиентам мы дарим скидку на каждую следующую покупку</p>
                     </div>
                     <div class="delivery-cards__item">
                         <img src="/wp-content/themes/storefront-child/svg/main/delivery/money-back.svg" alt="">
@@ -1398,7 +1398,6 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
     /**
      * Render dellin widget
      * @return false|string
-     * @todo Разделить параметры продукта по складам
      */
     function get_dellin_widget()
     {

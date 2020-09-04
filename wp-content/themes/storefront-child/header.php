@@ -31,7 +31,11 @@
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-176421783-1"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
         gtag('js', new Date());
 
         gtag('config', 'UA-176421783-1');
@@ -39,7 +43,7 @@
     <meta charset="<?php bloginfo('charset'); ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="yandex-verification" content="0395359e061a0ba6" />
+    <meta name="yandex-verification" content="0395359e061a0ba6"/>
     <link rel="profile" href="http://gmpg.org/xfn/11">
     <link rel="pingback" href="<?php bloginfo('pingback_url'); ?>">
     <?php wp_head(); ?>
@@ -47,6 +51,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css"
           integrity="sha512-ZKX+BvQihRJPA8CROKBhDNvoc2aDMOdAlcm7TUQY+35XYtrd3yh95QOOhsPDQY9QnKE0Wqag9y38OIgEvb88cA=="
           crossorigin="anonymous"/>
+    <script src="//code-ya.jivosite.com/widget/CQoeyjgSd2" async></script>
 </head>
 
 <body <?php body_class(); ?>>

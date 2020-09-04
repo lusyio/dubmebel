@@ -27,7 +27,6 @@ do_action('storefront_loop_before');
                      */
                     if ($post->post_type === 'product') {
                         get_template_part('content-product', get_post_format());
-
                     }
                 endwhile;
                 ?>
