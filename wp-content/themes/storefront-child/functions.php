@@ -832,42 +832,44 @@ function get_categories_with_subcategories($active_cat_ID)
     );
     $product_cats = get_terms($args);
     foreach ($product_cats as $product_cat) {
-        echo '<ul class="category-list">';
-        if ($active_cat_ID === $product_cat->term_id) {
-            $active = 'active';
-        } else {
-            $active = '';
-        }
-        $child_args = array(
-            'taxonomy' => 'product_cat',
-            'hide_empty' => true,
-            'parent' => $product_cat->term_id
-        );
-        $child_product_cats = get_terms($child_args);
-        $isChildActive = false;
-        $activeSub = '';
-        foreach ($child_product_cats as $child_product_cat) {
-            if ($active_cat_ID === $child_product_cat->term_id && $product_cat->term_id === $child_product_cat->parent) {
-                $isChildActive = true;
-                $activeSub = 'active';
+        if ($product_cat->slug !== 'sale-category') {
+            echo '<ul class="category-list">';
+            if ($active_cat_ID === $product_cat->term_id) {
+                $active = 'active';
+            } else {
+                $active = '';
             }
-        }
-        $link = get_term_link($product_cat->slug, $product_cat->taxonomy);
-        echo '<li class="' . $active . '"><a href="' . $link . '">' . $product_cat->name . '</a></li>';
-        if ((count($child_product_cats) !== 0 && $active_cat_ID === $product_cat->term_id) || (count($child_product_cats) !== 0 && $isChildActive)) {
-            echo '<ul class="subcategory-list">';
+            $child_args = array(
+                'taxonomy' => 'product_cat',
+                'hide_empty' => true,
+                'parent' => $product_cat->term_id
+            );
+            $child_product_cats = get_terms($child_args);
+            $isChildActive = false;
+            $activeSub = '';
             foreach ($child_product_cats as $child_product_cat) {
                 if ($active_cat_ID === $child_product_cat->term_id && $product_cat->term_id === $child_product_cat->parent) {
+                    $isChildActive = true;
                     $activeSub = 'active';
-                } else {
-                    $activeSub = '';
                 }
-                $linkSub = get_term_link($child_product_cat->slug, $child_product_cat->taxonomy);
-                echo '<li class="' . $activeSub . '"><a href="' . $linkSub . '">' . $child_product_cat->name . '</a></li>';
+            }
+            $link = get_term_link($product_cat->slug, $product_cat->taxonomy);
+            echo '<li class="' . $active . '"><a href="' . $link . '">' . $product_cat->name . '</a></li>';
+            if ((count($child_product_cats) !== 0 && $active_cat_ID === $product_cat->term_id) || (count($child_product_cats) !== 0 && $isChildActive)) {
+                echo '<ul class="subcategory-list">';
+                foreach ($child_product_cats as $child_product_cat) {
+                    if ($active_cat_ID === $child_product_cat->term_id && $product_cat->term_id === $child_product_cat->parent) {
+                        $activeSub = 'active';
+                    } else {
+                        $activeSub = '';
+                    }
+                    $linkSub = get_term_link($child_product_cat->slug, $child_product_cat->taxonomy);
+                    echo '<li class="' . $activeSub . '"><a href="' . $linkSub . '">' . $child_product_cat->name . '</a></li>';
+                }
+                echo '</ul>';
             }
             echo '</ul>';
         }
-        echo '</ul>';
     }
 }
 

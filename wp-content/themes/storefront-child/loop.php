@@ -26,7 +26,7 @@ do_action('storefront_loop_before');
                      * called content-___.php (where ___ is the Post Format name) and that will be used instead.
                      */
                     if ($post->post_type === 'product') {
-                        get_template_part('content-product', get_post_format());
+                        get_template_part('content-product-search', get_post_format());
                     }
                 endwhile;
                 ?>
