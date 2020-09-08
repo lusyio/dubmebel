@@ -16,38 +16,3 @@
  */
 
 defined('ABSPATH') || exit;
-
-$args = array(
-    'taxonomy' => "product_cat",
-);
-
-global $wp_query;
-$activeCat = $wp_query->get_queried_object();
-
-$categories = get_terms($args);
-foreach ($categories as $category):
-    $active = 'non-active';
-    if ($activeCat->slug === $category->slug) {
-        $active = 'active';
-    }
-    if ($activeCat->parent === $category->term_id) {
-        $active = 'active';
-    }
-    if ($category->parent === 0) :
-        $thumbnail_id = get_term_meta($category->term_id, 'thumbnail_id', true);
-        $image = wp_get_attachment_url($thumbnail_id);
-        ?>
-        <div class="col-lg-4 col-sm-6 col-12 d-flex">
-            <a class="d-flex w-100" href="<?= get_term_link($category->term_id, 'product_cat') ?>">
-                <div id="<?= $category->slug ?>" class="category-card d-flex w-100 <?= $active ?>"
-                     style='background-image: url("<?= $image ?>")'>
-                    <div class="category-card__body">
-                        <p class="category-card__name"><?= $category->name ?></p>
-                        <p class="category-card__description"><?= $category->description ?></p>
-                    </div>
-                </div>
-            </a>
-        </div>
-    <?php
-    endif;
-endforeach;
