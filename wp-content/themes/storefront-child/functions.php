@@ -692,7 +692,6 @@ function wg_view_all_products()
 
 /**
  * Render pagination for woocommerce
- *
  * @return false|string
  */
 function get_pagination_woo()

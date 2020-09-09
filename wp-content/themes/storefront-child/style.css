@@ -527,8 +527,34 @@ footer .navbar-brand-logo {
     grid-area: 2 / 4 / 3 / 5;
 }
 
+.categories-grid .categories-grid__item--sale-category > div {
+    background-color: #D0E5C5 !important;
+    background-position: center;
+    background-size: 50%;
+    background-position-y: 115%;
+}
+
+.categories-grid .categories-grid__item--sale-category > p {
+    width: 75%;
+    top: 32px;
+}
+
 .categories-grid .categories-grid__item--rattan-furniture > p span, .categories-grid .categories-grid__item--sale-category > p span {
-    max-width: 80%;
+    max-width: 100%;
+    font-weight: 800;
+    font-size: 36px;
+    line-height: 24px;
+    text-align: center;
+    color: #FFFFFF;
+    margin-bottom: 18px;
+}
+
+.categories-grid .categories-grid__item--sale-category > p .categories-grid__price {
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 22px;
+    text-align: center;
+    color: #FFFFFF;
 }
 
 .categories-grid .categories-grid__item--antique-furniture {
