@@ -535,8 +535,9 @@ footer .navbar-brand-logo {
 }
 
 .categories-grid .categories-grid__item--sale-category > p {
-    width: 75%;
+    width: 85%;
     top: 32px;
+    left: 30px;
 }
 
 .categories-grid .categories-grid__item--rattan-furniture > p span, .categories-grid .categories-grid__item--sale-category > p span {
