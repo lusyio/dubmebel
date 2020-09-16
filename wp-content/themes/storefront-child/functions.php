@@ -480,6 +480,7 @@ function get_categories_list($type = '')
                             $image = wp_get_attachment_url($thumbnail_id);
                             if ($image):
                                 if ($category->slug === 'sale-category'):?>
+                                <?php var_dump($category); ?>
                                     <a href="<?= get_permalink(4285) ?>"
                                        class="categories-grid__item categories-grid__item--<?= $category->slug ?>">
                                         <div style="background-image: url('<?= $image ?>')">
